@@ -1,6 +1,6 @@
 # 继承自：StaticIntegrator
 
-class Linear(object):
+class LoadControl(object):
     def __init__(self, deltaLambda, numIncr, minLambda, maxLambda):
         pass
 

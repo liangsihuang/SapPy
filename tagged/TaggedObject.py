@@ -1,7 +1,7 @@
 # 继承自：无
 class TaggedObject(object):
     def __init__(self, tag):
-        self.__theTag = tag 
-
+        self._theTag = tag 
+# tag 是 int
     def getTag(self):
-        return self.__theTag
+        return self._theTag

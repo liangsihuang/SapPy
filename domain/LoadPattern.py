@@ -1,6 +1,6 @@
 # 继承自：DomainComponent
 
-class SP_Constraint(object):
+class LoadPattern(object):
     def __init__(self, tag):
         pass
 

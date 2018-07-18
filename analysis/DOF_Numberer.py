@@ -1,6 +1,6 @@
 # 继承自：MovableObject
 
-class PenaltyConstraintHandler(object):
+class DOF_Numberer(object):
     def __init__(self, theGraphNumberer):
         pass
 
