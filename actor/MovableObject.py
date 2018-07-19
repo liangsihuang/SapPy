@@ -5,3 +5,4 @@ class MovableObject(object):
         self._classTag = theTag
         # self._dbTag = 0
         # # dbTag 是干什么的？
+        # database?

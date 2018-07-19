@@ -19,8 +19,11 @@ class Domain(object):
             else:
                 theNodes.addCompenent(node)
     
-    def addElement(self, Element):
-        pass
+    def addElement(self, element):
+        eleTag = element.getTag()
+        # check all the element nodes exists in the domain
+
+        
     
     def addSP_Constraint(self, SP_Constraint):
         pass

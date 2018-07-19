@@ -1,7 +1,6 @@
-# 继承自：Material
-class UniaxialMaterial(object):
-    def __init__(self):
-        pass
+from material.Material import Material
 
-    def addNode(self, Node):
-        pass
+class UniaxialMaterial(Material):
+
+    def __init__(self, tag, clasTag):
+        super().__init__(tag, clasTag)
