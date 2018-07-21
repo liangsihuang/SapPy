@@ -42,17 +42,25 @@ class Domain(object):
         # 还要：
         # finally check the ele has correct number of dof
         # mark the Domain as having been changed
-
-
-
-        
     
-    def addSP_Constraint(self, SP_Constraint):
-        pass
-    
+    def addSP_Constraint(self, spConstraint):
+        nodeTag = spConstraint.getNodeTag()
+        dof = spConstraint.getDOF_Number()
+        # check node exists in the domain
+        if(self._theNodes.hasComponent(nodeTag)):
+            pass
+        else:
+            print('Domain::addSP_Constraint - cannot add as node with tag ')
+            print(str(nodeTag)+' dose not exist in the domain.\n')
+        # check that the DOF specified exists at the Node
+
+
     def addLoadPattern(self, LoadPattern):
         pass
 # methods to add components to a LoadPattern object
     def addNodalLoad(self, NodalLoad, loadPatternTag):
         pass
+
+    def getNode(self, tag):
+        return self._theNodes[tag]
 
