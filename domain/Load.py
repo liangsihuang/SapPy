@@ -11,3 +11,4 @@ class Load(DomainComponent):
     
     def getLoadPatternTag():
         return self._loadPatternTag
+    

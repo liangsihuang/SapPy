@@ -9,6 +9,8 @@ class Domain(object):
         self._theMPs      = MapOfTaggedObjects()
         self._theLoadPatterns = MapOfTaggedObjects()
         self._theParameters   = MapOfTaggedObjects()
+        self._currentTime = 0.0
+
 
 # methods to populate a domain
     def addNode(self, node):
@@ -101,6 +103,23 @@ class Domain(object):
     def getNode(self, tag):
         return self._theNodes.get(tag, defalut=0)
     
+    def getNodes(self):
+        
+    
     def getSPs(self):
         return self._theSPs
 
+# methods to update the domain
+    def analysisStep(self, dT):
+        return 0
+
+    def revertToLastCommit(self):
+        # 
+        # first invoke revertToLastCommit   on all nodes and elements in the domain
+        # 
+
+
+# methods to query the state of the domain
+    def getCurrentTime(self):
+        return self._currentTime
+    

@@ -12,8 +12,8 @@ from analysis.LoadControl import LoadControl
 from analysis.PenaltyConstraintHandler import PenaltyConstraintHandler
 from graph.RCM import RCM
 from analysis.DOF_Numberer import DOF_Numberer
-from system_of_eqn.BandSPDLinLapackSolver import BandSPDLinLapackSolver
-from system_of_eqn.BandSPDLinSOE import BandSPDLinSOE
+from system.BandSPDLinLapackSolver import BandSPDLinLapackSolver
+from system.BandSPDLinSOE import BandSPDLinSOE
 from analysis.StaticAnalysis import StaticAnalysis
 
 theDomain = Domain()
@@ -69,7 +69,7 @@ theNumberer = DOF_Numberer(theRCM)
 theSolver = BandSPDLinLapackSolver()
 theSOE = BandSPDLinSOE(theSolver)
 
-StaticAnalysis theAnalysis(theDomain, theHandler, theNumberer, theModel, theSolnAlgo, theSOE, theIntegrator)
+theAnalysis = StaticAnalysis(theDomain, theHandler, theNumberer, theModel, theSolnAlgo, theSOE, theIntegrator)
 
 numSteps = 1
 theAnalysis.analyze(numSteps)
