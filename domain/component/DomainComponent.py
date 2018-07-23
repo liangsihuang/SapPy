@@ -4,14 +4,16 @@ from actor.MovableObject import MovableObject
 class DomainComponent(TaggedObject, MovableObject):
     
     def __init__(self, tag, clasTag):
-        # _theTag 继承自 TaggedObject
-        # _classTag 继承自 MovableObject
-        self._theTag = tag
-        self._classTag = clasTag
+        TaggedObject.__init__(tag)
+        MovableObject.__init__(clasTag)
         self._theDomain = None
     
     def setDomain(self, model):
         self._theDomain = model
+    
+    def getDomain(self):
+        return self._theDomain
+
 
 
 

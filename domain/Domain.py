@@ -1,14 +1,14 @@
-from tagged.MapOfTaggedObject import MapOfTaggedObject
+from tagged.MapOfTaggedObjects import MapOfTaggedObjects
 
 class Domain(object):
     def __init__(self):
-        self._theElements = MapOfTaggedObject()
-        self._theNodes    = MapOfTaggedObject()
-        self._theSPs      = MapOfTaggedObject()
-        self._thePCs      = MapOfTaggedObject()
-        self._theMPs      = MapOfTaggedObject()
-        self._theLoadPatterns = MapOfTaggedObject()
-        self._theParameters   = MapOfTaggedObject()
+        self._theElements = MapOfTaggedObjects()
+        self._theNodes    = MapOfTaggedObjects()
+        self._theSPs      = MapOfTaggedObjects()
+        self._thePCs      = MapOfTaggedObjects()
+        self._theMPs      = MapOfTaggedObjects()
+        self._theLoadPatterns = MapOfTaggedObjects()
+        self._theParameters   = MapOfTaggedObjects()
 
 # methods to populate a domain
     def addNode(self, node):
@@ -53,14 +53,54 @@ class Domain(object):
             print('Domain::addSP_Constraint - cannot add as node with tag ')
             print(str(nodeTag)+' dose not exist in the domain.\n')
         # check that the DOF specified exists at the Node
-
+        node = self.getNode(nodeTag)
+        numDOF = node.getTag()
+        if(numDOF<dof):
+            print('Domain::addSP_Constraint - cannnot add as node with tag ')
+            print(str(nodeTag)+' does not have associated constrainted DOF\n')
+        # check if an exsiting SP_Constraint exists for that dof at the node
+        found = False
+        # theExistingSPs = self.getSPs()
+        # for k, v in theExistingSPs.items():
+        for k, v in self._theSPs.items():
+            spNodeTag = v.getNodeTag()
+            spDof = v.getDOF_Number()
+            if(nodeTag == spNodeTag & dof == spDof):
+                found = True
+        if(found == True):
+            print('Domain::addSP_Constraint - cannot add as node already constrained in that dof by existing SP_Constraint.\n')
+        # check that no other object with similar tag exists in model
+        tag = spConstraint.getTag()
+        if(self._theSPs.hasComponent(tag)):
+            print('Domain::addSP_Constraint - cannot add as constraint with tag ')
+            print(str(tag)+' already exists in the domain.\n')
+        else:
+            self._theSPs.addComponent(spConstraint)
+            spConstraint.setDomain(self)
+            
 
     def addLoadPattern(self, LoadPattern):
         pass
 # methods to add components to a LoadPattern object
-    def addNodalLoad(self, NodalLoad, loadPatternTag):
-        pass
+    def addNodalLoad(self, load, pattern):
+        nodTag = load.getNodeTag()
+        res = self.getNode(nodTag)
+        if(res==0):
+            print('Domain::addNodalLoad() - no node with tag '+str(nodTag)+' exists in the model.\n')
+            print('Not adding the nodal load.')
+        # now add it to the pattern
+        thePattern = self._theLoadPatterns.getComponent(pattern)
+        if(thePattern == 0):
+            print('Domain::addNodalLoad() - no pattern with tag '+str(pattern)+' exists in the model.\n')
+            print('Not adding the nodal load.')
+        thePattern.addNodalLoad(load)
+        load.setDomain(self)
 
+
+# methods to access the components of a domain
     def getNode(self, tag):
-        return self._theNodes[tag]
+        return self._theNodes.get(tag, defalut=0)
+    
+    def getSPs(self):
+        return self._theSPs
 

@@ -1,8 +1,10 @@
-# 继承自：GraphNumberer
+from graph.GraphNumberer import GraphNumberer
 
-class RCM(object):
-    def __init__(self, GPS=False):
-        pass
+class RCM(GraphNumberer):
+    GraphNUMBERER_TAG_RCM = 1
+    def __init__(self, gps=False):
+        super().__init__(self.GraphNUMBERER_TAG_RCM)
+        self._GPS = gps # flag for gibbs-poole-stodlymer
 
     def setTimeSeries(self, theSeries):
         pass
