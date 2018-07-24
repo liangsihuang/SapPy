@@ -10,5 +10,14 @@ class Truss(Element):
         self._theMaterial = theMaterial
         self._A = A
     
+    # public methods to obtain information about dof and connectivity
     def getExternalNodes(self):
         return self._connectedExternalNodes
+    
+    # public methods to set the state of the element
+    def revertToLastCommit(self):
+        return self._theMaterial.revertToLastCommit()
+    # public methods to obtain stiffness, mass, damping and residual information
+
+    # public methods for element output
+

@@ -9,10 +9,17 @@ class Domain(object):
         self._theMPs      = MapOfTaggedObjects()
         self._theLoadPatterns = MapOfTaggedObjects()
         self._theParameters   = MapOfTaggedObjects()
-        self._currentTime = 0.0
+
+        self._currentTime = 0.0     # current pseudo time
+        self._committedTime = 0.0   # the committed pseudo time
+        self._dT = 0.0              # difference between committed and current time
+
+        self._currentGeoTag = 0                 # an integer used mark if domain has changed
+        self._hasDomainChangedFlag = False      # a bool flag used to indicate if GeoTag needs to be ++
+        self._lastGeoSendTag = -1               # the value of currentGeoTag when sendSelf was last invoked
 
 
-# methods to populate a domain
+    # methods to populate a domain
     def addNode(self, node):
         nodTag = node.getTag()
         # 先要看看 theNodes 里面有没有已经存在 node，输入 node 的节点号 nodTag
@@ -83,7 +90,8 @@ class Domain(object):
 
     def addLoadPattern(self, LoadPattern):
         pass
-# methods to add components to a LoadPattern object
+
+    # methods to add components to a LoadPattern object
     def addNodalLoad(self, load, pattern):
         nodTag = load.getNodeTag()
         res = self.getNode(nodTag)
@@ -98,28 +106,73 @@ class Domain(object):
         thePattern.addNodalLoad(load)
         load.setDomain(self)
 
+    # methods to remove the components
 
-# methods to access the components of a domain
+    # methods to access the components of a domain
     def getNode(self, tag):
         return self._theNodes.get(tag, defalut=0)
     
+    def getElements(self):
+        return self._theElements
     def getNodes(self):
-        
-    
+        return self._theNodes
+    def getPCs(self):
+        return self._thePCs
+    def getMPs(self):
+        return self._theMPs
     def getSPs(self):
         return self._theSPs
+    def getLoadPatterns(self):
+        return self._theLoadPatterns
+    def getDomainAndLoadPatternSPs():
+        pass
+    def getParameters():
+        pass
+    
+    # methods to query the state of the domain
+    def getCurrentTime(self):
+        return self._currentTime  
 
-# methods to update the domain
+    # methods to get element and node graph
+
+    # methods to update the domain
     def analysisStep(self, dT):
         return 0
 
+    def applyLoad(self, timeStep):
+        # set the pseudo time in the domai to be newTime
+        self._currentTime = timeStep
+        self._dT = self._currentTime - self._committedTime
+        # first loop over nodes and elements getting them to first zero their loads
+        for tag, node in self._theNodes:
+            node.zeroUnbalancedLoad()
+        for tag, ele in self._theElements:
+            if(ele.isSubdomain()==False):
+                ele.zeroLoad()
+        # now loop over load patterns, invoking applyLoad on them
+
+
     def revertToLastCommit(self):
-        # 
-        # first invoke revertToLastCommit   on all nodes and elements in the domain
-        # 
-
-
-# methods to query the state of the domain
-    def getCurrentTime(self):
-        return self._currentTime
+        # first invoke revertToLastCommit on all nodes and elements in the domain
+        for tag, node in self._theNodes:
+            node.revertToLastCommit()
+        for tag, ele in self._theElements:
+            ele.revertToLastCommit()
+        # set the current time and load factor in the domain to last commited
+        ...
     
+    # methods for eigenvalue analysis
+    # methods for other objects to determine if model has changed
+    def hasDomainChanged(self):
+        # if the flag, indicating the domain has changed since the last call to this method, has changed
+        # increment the integer and reset the flag
+
+    # methods for output
+    # nodal methods required in domain interface for parallel interpreter
+
+
+    
+
+
+
+      

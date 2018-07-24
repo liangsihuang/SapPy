@@ -10,9 +10,11 @@ class LoadPattern(DomainComponent):
         self._theNodalLoads = MapOfTaggedObjects()
         self._currentGeoTag = 0
 
+    # methods to set the associated TimeSeries and Domain
     def setTimeSeries(self, theTimeSeries):
         self._theSeries = theTimeSeries
 
+    # methods to add loads
     def addNodalLoad(self, load):
         theDomain = self.getDomain()
         self._theNodalLoads.addComponent(load)
@@ -20,6 +22,14 @@ class LoadPattern(DomainComponent):
         load.setPatternTag(self.getTag())
         self._currentGeoTag = self._currentGeoTag + 1
 
+    # methods to remove loads
+
+    # methods to apply loads
+
+    # methods for o/p
+
+    # methods to obtain a blank copy of the LoadPattern
+    
 
 
     
