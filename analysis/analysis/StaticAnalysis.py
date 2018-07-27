@@ -12,15 +12,47 @@ class StaticAnalysis(Analysis):
         self._theIntegrator = theStaticIntegrator
         self._theTest = theConvergenceTest
 
-    def analyze(self, numSteps):
-        the_Domain = self.getDomain()
-        result = 0
+        self._domainStamp = 0
 
-        for i in range(0,numSteps,1):
+    def analyze(self, numSteps):
+        result = 0
+        the_Domain = self.getDomain()
+        for i in range(0,numSteps):
             result = self._theAnalysisModel.analysisStep()
             if(result<0):
                 print('StaticAnalysis::analyze() - the AnalysisModel failed ')
                 print('at iteration: '+str(i)+' with domain at load factor ')
                 print(str(the_Domain.getCurrentTime())+'.\n')
+                the_Domain.revertToLastCommit()
+                return -2
+        # check for change in Domain since last step. 
+        # As a change can occur in a commit() in a domaindecomp with load balancing
+        # this must now be inside the loop.
+
+        stamp = the_Domain.hasDomainChanged()
+        if(stamp!=self._domainStamp): 
+            self._domainStamp = stamp
+    
+    def domainChanged(self):
+        result = 0
+        the_Domain = self.getDomain()
+        stamp = the_Domain.hasDomainChanged()
+        self._domainStamp = stamp
+
+        self._theAnalysisModel.clearAll()
+        self._theConstraintHandler.clearAll()
+
+        # now we invoke handle() on the constraint handler which causes the creation of FE_Element
+        # and DOF_Group objects and their addition to the AnalysisModel
+        result = self._theConstraintHandler.handle()
+        if(result<0):
+            print('StaticAnalysis::domainChanged() - ConstraintHandler::handle() failed')
+            return -1
+        
+        # now we invoke number() on the numberer which causes equation numbers to be assigned to all the
+        # DOFs in the AnalysisModel.
+        
+
+
                 
         

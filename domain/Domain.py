@@ -5,10 +5,10 @@ class Domain(object):
         self._theElements = MapOfTaggedObjects()
         self._theNodes    = MapOfTaggedObjects()
         self._theSPs      = MapOfTaggedObjects()
-        self._thePCs      = MapOfTaggedObjects()
         self._theMPs      = MapOfTaggedObjects()
+        self._thePCs      = MapOfTaggedObjects()
         self._theLoadPatterns = MapOfTaggedObjects()
-        self._theParameters   = MapOfTaggedObjects()
+        self._theParameters   = MapOfTaggedObjects()    
 
         self._currentTime = 0.0     # current pseudo time
         self._committedTime = 0.0   # the committed pseudo time
@@ -18,6 +18,8 @@ class Domain(object):
         self._hasDomainChangedFlag = False      # a bool flag used to indicate if GeoTag needs to be ++
         self._lastGeoSendTag = -1               # the value of currentGeoTag when sendSelf was last invoked
 
+        self._nodeGraphBuiltFlag = False 
+        self._eleGraphBuiltFlag = False
 
     # methods to populate a domain
     def addNode(self, node):
@@ -150,6 +152,13 @@ class Domain(object):
             if(ele.isSubdomain()==False):
                 ele.zeroLoad()
         # now loop over load patterns, invoking applyLoad on them
+        for tag, loadPat in self._theLoadPatterns:
+            loadPat.applyLoad(timeStep)
+        # finally loop over the MP_Constraints and SP_Constraints of the domain
+        # for tag, theMP in self._theMPs:
+            # theMP.applyConstraint(timeStep)
+        for tag, theSP in self._theSPs:
+            theSP.applyConstraint(timeStep)
 
 
     def revertToLastCommit(self):
@@ -166,7 +175,13 @@ class Domain(object):
     def hasDomainChanged(self):
         # if the flag, indicating the domain has changed since the last call to this method, has changed
         # increment the integer and reset the flag
-
+        result = self._hasDomainChangedFlag
+        self._hasDomainChangedFlag = False
+        if(result==True):
+            self._currentGeoTag = self._currentGeoTag + 1
+            self._nodeGraphBuiltFlag = False
+            self._eleGraphBuiltFlag = False
+        return self._currentGeoTag
     # methods for output
     # nodal methods required in domain interface for parallel interpreter
 

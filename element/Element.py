@@ -4,24 +4,69 @@ class Element(DomainComponent):
 
     def __init__(self, tag, classTag):
         super().__init__(tag, classTag)
-        # 构造函数不写也行，因为没新东西
-        # 后面扩展会加新东西
+        self._alphaM = 0.0
+        self._betaK = 0.0
+        self._betaK0 = 0.0
+        self._betaKc = 0.0
+        self._Kc = None         # pointer to hold last committed matrix if needed for rayleigh damping
+        self._previousK = None
+        self._numPreviousK = 0
+
+        self._index = -1
+        self._nodeIndex = -1
+
     
     # methods dealing with nodes and number of external dof
+    def getNumExternalNodes(self):
+        pass # 纯虚函数
     def getExternalNodes(self):
-        pass # 纯虚，在子类实现
+        pass # 纯虚函数
+    def getNode(self):
+        pass # 纯虚函数
+    def getNumDOF(self):
+        pass # 纯虚函数
+    def getCharacteristicLength(self):
+        pass
         
     # methods dealing with commited state and update
+    def commitState(self):
+        pass
     def revertToLastCommit(self):
-        pass # 纯虚，在子类实现
-    
+        pass # 纯虚函数
+    def revertToStart(self):
+        pass
+    def update(self):
+        pass
     def isSubdomain(self):
         return False # 有鬼用？（注意：虚函数）
 
     # methods to return the current linearized stiffness, damping and mass matrices
+    def getTangentStiff(self):
+        pass # 纯虚函数
+    def getInitialStiff(self):
+        pass # 纯虚函数
+    def getDamp(self):
+        pass
+    def getMass(self):
+        pass
+    def getGeometricTangentStiff(self):
+        pass
+
     # methods for applying loads
     def zeroLoad(self):
         pass # 空函数？有鬼用？（注意：虚函数）
+    def addLoad(self, theLoad, loadFactor):
+        pass
+    # def addLoad(self, theLoad, loadFactors):
+    def addInertiaLoadToUnbalance(self, accel):
+        pass
+    def setRayleighDampingFactors(self, alphaM, betaK, betaK0, betaKc):
+        pass
 
     # methods for obtaining resisting force (force includes elemental loads)
+    def getResistingForce(self):
+        pass # 纯虚函数
+    def getResistingForceIncInertia(self):
+        pass
+
     # methods for obtaining information specific to an element
