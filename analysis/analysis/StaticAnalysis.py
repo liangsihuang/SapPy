@@ -13,6 +13,9 @@ class StaticAnalysis(Analysis):
         self._theTest = theConvergenceTest
 
         self._domainStamp = 0
+    
+    def clearAll(self):
+        pass
 
     def analyze(self, numSteps):
         result = 0
@@ -32,7 +35,12 @@ class StaticAnalysis(Analysis):
         stamp = the_Domain.hasDomainChanged()
         if(stamp!=self._domainStamp): 
             self._domainStamp = stamp
-    
+
+    def eigen(self):
+        pass
+    def initialize(self):
+        pass
+
     def domainChanged(self):
         result = 0
         the_Domain = self.getDomain()
@@ -51,7 +59,28 @@ class StaticAnalysis(Analysis):
         
         # now we invoke number() on the numberer which causes equation numbers to be assigned to all the
         # DOFs in the AnalysisModel.
-        
+    
+    def setNumberer(self, theNumberer):
+        pass
+    def setAlgorithm(self, theAlgorithm):
+        pass
+    def setIntegrator(self, theIntegrator):
+        pass
+    def setLinearSOE(self, theSOE):
+        pass
+    def setConvergenceTest(self, theTest):
+        pass
+    def setEigenSOE(self, theSOE):
+        pass
+    
+    def getAlgorithm(self):
+        pass
+    def getIntegrator(self):
+        pass
+    def getConvergenceTest(self):
+        pass
+    
+    
 
 
                 

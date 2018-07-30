@@ -6,3 +6,7 @@ class Analysis(object):
     def getDomain(self):
         return self._theDomain
 
+    def DomainChanged(self):
+        pass # 纯虚函数
+    
+

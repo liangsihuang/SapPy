@@ -21,7 +21,7 @@ class Domain(object):
         self._nodeGraphBuiltFlag = False 
         self._eleGraphBuiltFlag = False
 
-    # methods to populate a domain
+    # methods to populate a domain (add components to a domain)
     def addNode(self, node):
         nodTag = node.getTag()
         # 先要看看 theNodes 里面有没有已经存在 node，输入 node 的节点号 nodTag
@@ -88,7 +88,13 @@ class Domain(object):
         else:
             self._theSPs.addComponent(spConstraint)
             spConstraint.setDomain(self)
-            
+
+    def addPressure_Constraint(self):
+        pass
+
+    def addMP_Constraint(self):
+        pass
+        
 
     def addLoadPattern(self, LoadPattern):
         pass
@@ -108,12 +114,34 @@ class Domain(object):
         thePattern.addNodalLoad(load)
         load.setDomain(self)
 
+    def addElementalLoad(self):
+        pass
+
+    def addSP_Constraint(self):
+        pass
     # methods to remove the components
+    def clearAll(self):
+        pass
+    def removeElement(self, tag):
+        pass
+    def removeNode(self, tag):
+        pass
+    def removeSP_Constraint(self, tag):
+        pass
+    def removePressure_Constraint(self, tag):
+        pass
+    def removeMP_Constraint(self, tag):
+        pass
+
+    def removeLoadPattern(self, tag):
+        pass
+    def removeNodalLoad(self, loadPattern):
+        pass
+    def removeElementLoad(self, loadPattern):
+        pass
+    # def removeSP_Constraint(self, loadPattern):
 
     # methods to access the components of a domain
-    def getNode(self, tag):
-        return self._theNodes.get(tag, defalut=0)
-    
     def getElements(self):
         return self._theElements
     def getNodes(self):
@@ -128,19 +156,67 @@ class Domain(object):
         return self._theLoadPatterns
     def getDomainAndLoadPatternSPs():
         pass
-    def getParameters():
+    # def getParameters():
+    #     pass
+    def getElement(self, tag):
         pass
-    
+    def getNode(self, tag):
+        return self._theNodes.get(tag, defalut=0)
+    def getSP_Constraint(self, tag):
+        pass
+    def getPressure_Constraint(self, tag):
+        pass
+    def getMP_Constraint(self, tag):
+        pass
+    def getLoadPattern(self, tag):
+        pass
+
     # methods to query the state of the domain
     def getCurrentTime(self):
-        return self._currentTime  
+        return self._currentTime
+    def getCommitTag(self):
+        pass
+    def getNumElements(self):
+        pass
+    def getNumNodes(self):
+        pass
+    def getNumSPs(self):
+        pass
+    def getNumPCs(self):
+        pass
+    def getNumMPs(self):
+        pass
+    def getNumLoadPatterns(self):
+        pass
+    
+    def getPysicalBounds(self):
+        pass
+        # vector
+    def getNodeResponse(self, nodeTag):
+        pass
+        # vector
+    def getElementResponse(self, eleTag):
+        pass
+        # vector
+    
 
     # methods to get element and node graph
-
+    def getElmentGraph(self):
+        pass
+    def getNodeGraph(self):
+        pass
+    def clearElementGraph(self):
+        pass
+    def clearNodeGraph(self):
+        pass
+    
     # methods to update the domain
-    def analysisStep(self, dT):
-        return 0
-
+    def setCommitTag(self, newTag):
+        pass
+    def setCurrentTime(self, newTime):
+        pass
+    def setCommittedTime(self, newTime):
+        pass
     def applyLoad(self, timeStep):
         # set the pseudo time in the domai to be newTime
         self._currentTime = timeStep
@@ -159,8 +235,18 @@ class Domain(object):
             # theMP.applyConstraint(timeStep)
         for tag, theSP in self._theSPs:
             theSP.applyConstraint(timeStep)
-
-
+    
+    def setLoadConstant(self):
+        pass
+    def unsetLoadConstant(self):
+        pass
+    def initialize(self):
+        pass
+    def setRayleighDampingFactors(self, alphaM, betaK, betaK0, betaKc):
+        pass
+    
+    def commit(self):
+        pass
     def revertToLastCommit(self):
         # first invoke revertToLastCommit on all nodes and elements in the domain
         for tag, node in self._theNodes:
@@ -168,8 +254,17 @@ class Domain(object):
         for tag, ele in self._theElements:
             ele.revertToLastCommit()
         # set the current time and load factor in the domain to last commited
-        ...
+    def revertToStart(self):
+        pass
+    def update(self):
+        pass
     
+
+    def analysisStep(self, dT):
+        return 0
+    def eigenAnalysis(self, numMode, generalized, findSmallest):
+        pass
+        
     # methods for eigenvalue analysis
     # methods for other objects to determine if model has changed
     def hasDomainChanged(self):
@@ -182,6 +277,13 @@ class Domain(object):
             self._nodeGraphBuiltFlag = False
             self._eleGraphBuiltFlag = False
         return self._currentGeoTag
+    def getDomainChangeFlag(self):
+        pass
+    def domainChange(self):
+        pass
+    def setDomainChangeStamp(self):
+        pass
+        
     # methods for output
     # nodal methods required in domain interface for parallel interpreter
 
