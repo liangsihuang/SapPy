@@ -1,5 +1,9 @@
 from actor.MovableObject import MovableObject
 
+# DOF_Numberer: responsible for
+# 1. assigning equation numbers to the dof in each DOF_Group object.
+# 2. getting the FE_Element objects to determine the mapping of their local dof to the equation numbers.
+
 class DOF_Numberer(MovableObject):
     NUMBERER_TAG_DOF_Numberer = 1
     def __init__(self, aGraphNumberer):
@@ -13,7 +17,8 @@ class DOF_Numberer(MovableObject):
     
     
     
-    def numberDOF(self, lastDOF_Group):
+    def numberDOF(self, lastDOF_Group): # 有重载怎么办？？？
+        
         # check we have a model and a numberer
         theDomain = None
         if(self._theAnalysisModel!=None):
@@ -28,4 +33,9 @@ class DOF_Numberer(MovableObject):
         if(self._theAnalysisModel.getNumDOF_Groups()==None):
             return 0
     
+    def getAnalysisModel(self):
+        return self._theAnalysisModel
+    
+    def getGraphNumberer(self):
+        return self._theGraphNumberer
     

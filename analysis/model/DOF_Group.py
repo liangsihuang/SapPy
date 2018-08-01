@@ -1,6 +1,8 @@
 from tagged.TaggedObject import TaggedObject
 import numpy as np
 
+# DOF_Group:
+# 1. keep track of 
 class DOF_Group(TaggedObject):
     # static variables - single copy for all objects of the class
     numDOFs = 0

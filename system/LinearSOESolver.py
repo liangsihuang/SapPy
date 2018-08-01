@@ -1,5 +1,18 @@
 from actor.MovableObject import MovableObject
-# 这是个纯虚类，啥都没有
+
+# solve the system of equations stored in a LinearSOE object
+# abstract base class
+
 class LinearSOESolver(MovableObject):
+
     def __init__(self, clasTag):
         super().__init__(clasTag)
+    
+    def solve(self):
+        pass # 纯虚
+    
+    def setSize(self):
+        pass # 纯虚
+    
+    def getDeterminant(self):
+        pass

@@ -1,6 +1,7 @@
 from actor.MovableObject import MovableObject
 from tagged.ArrayOfTaggedObjects import ArrayOfTaggedObjects
 
+# AnalysisModel: hold and provide access to the FE_Element and DOF_Group objects
 class AnalysisModel(MovableObject):
     AnaMODEL_TAGS_AnalysisModel = 1
     def __init__(self):
