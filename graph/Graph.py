@@ -6,7 +6,7 @@ class Graph(object):
     def __init__(self):
         self._myVertices = MapOfTaggedObjects()
         self._numEdge = 0
-        self._nextFreeTag = self.START_VERTEX_NUM
+        self._nextFreeTag = Graph.START_VERTEX_NUM
 
     def addVertex(self, vertex, checkAdjacency):
         # check the vertex and its adjacency list

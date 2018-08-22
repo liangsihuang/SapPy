@@ -11,6 +11,10 @@ class BandSPDLinLapackSolver(BandSPDLinSolver):
             print('WARNING BandSPDLinLapackSolver::solve() - No LinearSOE object has been set. \n')
             return -1
         
+        n = self._theSOE._size()
+        kd = self._theSOE._half_band - 1
+        
+        
         
     def setSize(self):
         pass
