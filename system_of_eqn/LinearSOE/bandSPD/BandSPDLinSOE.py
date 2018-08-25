@@ -2,6 +2,11 @@ from system_of_eqn.LinearSOE.LinearSOE import LinearSOE
 
 # subclass of LinearSOE
 # It uses the LAPACK Upper storage scheme to store the components of the A matrix
+# 
+#       *    *   a13  a24  a35  a46      
+#       *   a12  a23  a34  a45  a56    
+#      a11  a22  a33  a44  a55  a66 
+# 行数 = half_band(包括对角线) ， 列数 = size(方程数 n)
 
 class BandSPDLinSOE(LinearSOE):
     LinSOE_TAGS_BandSPDLinSOE = 3
@@ -9,42 +14,41 @@ class BandSPDLinSOE(LinearSOE):
     def __init__(self, theSolver):
         super().__init__(self.LinSOE_TAGS_BandSPDLinSOE, theSolver)
         # theSolver 是 BandSPDLinSolver 类
-        self._size = 0
-        self._half_band = 0
+        self.size = 0
+        self.half_band = 0
         # pointer array
-        self._A = None
-        self._B = None
-        self._X = None
+        self.A = None # 以列表A来储存矩阵A
+        self.B = None
+        self.X = None
         # vector
-        self._vectX = None
-        self._vectB = None
+        self.vectX = None
+        self.vectB = NoneA
 
-        self._Asize = 0
-        self._Bsize = 0
-        self._factored = False
+        self.Asize = 0  # 矩阵A的行数×列数
+        self.Bsize = 0
+        self.factored = False
 
     def getNumEqn(self):
-        return self._size
+        return self.size
     
     def setSize(self, theGraph):
         result = 0
-        oldSize = self._size
-        self._size = theGraph.getNumVertex()
-        self._half_band = 0
+        oldSize = self.size
+        self.size = theGraph.getNumVertex() # 几何上的节点数 = 方程数
+        # 求半带宽（包括对角线）
+        self.half_band = 0
         theVertices = theGraph.getVertices()
         for tag, vertex in theVertices:
             vertexNum = vertex.getTag()
             theAdjacency = vertex.getAdjacency()
             for i in range(0, theAdjacency.Size()):
                 otherNum = theAdjacency[i]
-                diff = vertexNum - otherNum # 不用加绝对值吗？？
-                if(self._half_band < diff):
-                    self._half_band = diff
-        self._half_band = self._half_band + 1 # include the diagonal
+                diff = vertexNum - otherNum # 不用加绝对值吗？ 可能theAdjacency只储存了节点号比本身小的
+                if(self.half_band < diff):
+                    self.half_band = diff
+        self.half_band = self.half_band + 1 # include the diagonal
 
-        # 看看size 有没有大于 Asize, Bsize
-        if(self._half_band*self._size > self._Asize):
-            pass
+        self.Asize = self.half_band * self.size
         
         # invoke setSize() on the Solver
         theSolver = self.getSolver()
