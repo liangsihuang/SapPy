@@ -1,4 +1,6 @@
 from system_of_eqn.LinearSOE.LinearSOE import LinearSOE
+import numpy as np
+from matrix.Vector import Vector
 
 # subclass of LinearSOE
 # It uses the LAPACK Upper storage scheme to store the components of the A matrix
@@ -17,15 +19,15 @@ class BandSPDLinSOE(LinearSOE):
         self.size = 0
         self.half_band = 0
         # pointer array
-        self.A = None # 以列表A来储存矩阵A
+        self.A = None # 以array A来储存矩阵A
         self.B = None
         self.X = None
         # vector
         self.vectX = None
-        self.vectB = NoneA
+        self.vectB = None
 
         self.Asize = 0  # 矩阵A的行数×列数
-        self.Bsize = 0
+        self.Bsize = 0  # size 和 Bize 有什么区别？
         self.factored = False
 
     def getNumEqn(self):
@@ -48,7 +50,17 @@ class BandSPDLinSOE(LinearSOE):
                     self.half_band = diff
         self.half_band = self.half_band + 1 # include the diagonal
 
+        self.A = np.zeros(self.half_band*self.size, dtype=float)
         self.Asize = self.half_band * self.size
+        self.factored = False
+
+        self.B = np.zeros(self.size, dtype=float)
+        self.X = np.zeros(self.size, dtype=float)
+        
+        self.vectX = Vector(self.X, self.size)
+        self.vectB = Vector(self.B, self.size)
+
+        self.Bsize = self.size #???
         
         # invoke setSize() on the Solver
         theSolver = self.getSolver()
@@ -59,21 +71,42 @@ class BandSPDLinSOE(LinearSOE):
 
         return result
 
-    def addA(self, m, the_id, fact = 1.0):
-        # m 是 matrix
+    def addA(self, m, id1, fact = 1.0):
+        # 刚度矩阵组装
+        # m 是 Matrix 类，单元刚度矩阵
+        # id1 是 ID 类 , id是保留字，所以用id1，一个单元里所有节点的自由度=方程数
         # check for a quick return
         if fact == 0.0:
             return 0
         # check that m and id are of similar size
-        idSize = the_id.Size()
+        idSize = id1.Size()
         if idSize!=m.noRow() and idSize!=m.noCols() :
-            print('BandSPDLinSOE::addA() - Matrix and ID not of similar sizes. \n')
+            print('BandSPDLinSOE::addA() - Matrix and ID not of similar sizes.\n')
             return -1
+
         if fact==1.0: # do not need to multiply
             for i in range(0, idSize):
-                col = the_id[i]
-                if (col<self._size) and (col>=0) :
-                    pass
+                col = id1[i] 
+                if col<self.size and col>=0 :
+                    colii = (col + 1) * self.half_band - 1 # col 是从0开始！才说得通
+                    minColRow = col - self.half_band + 1
+                    for j in range(0, idSize):
+                        row = id1[j]
+                        if row<self.size and row>=0 and row<=col and row>=minColRow:
+                            a = colii + (row-col)
+                            self.A[a] = self.A[a] + m[j,i]
+        else:
+            for i in range(0, idSize):
+                col = id1[i] 
+                if col<self.size and col>=0 :
+                    colii = (col + 1) * self.half_band - 1 # col 是从0开始？
+                    minColRow = col - self.half_band + 1
+                    for j in range(0, idSize):
+                        row = id1[j]
+                        if row<self.size and row>=0 and row<=col and row>=minColRow:
+                            a = colii + (row-col)
+                            self.A[a] = self.A[a] + m[j,i]*fact # 多了一个fact
+        return 0
 
 
     def addColA(self, col, colIndex, fact = 1.0):
