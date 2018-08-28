@@ -18,11 +18,11 @@ class BandSPDLinSOE(LinearSOE):
         # theSolver 是 BandSPDLinSolver 类
         self.size = 0
         self.half_band = 0
-        # pointer array
-        self.A = None # 以array A来储存矩阵A
+        # numpy array
+        self.A = None # 以rank-2 array A来储存矩阵A
         self.B = None
         self.X = None
-        # vector
+        # Vector
         self.vectX = None
         self.vectB = None
 
@@ -50,7 +50,7 @@ class BandSPDLinSOE(LinearSOE):
                     self.half_band = diff
         self.half_band = self.half_band + 1 # include the diagonal
 
-        self.A = np.zeros(self.half_band*self.size, dtype=float)
+        self.A = np.zeros((self.half_band,self.size), dtype=float) # rank-2 array
         self.Asize = self.half_band * self.size
         self.factored = False
 
@@ -84,28 +84,13 @@ class BandSPDLinSOE(LinearSOE):
             print('BandSPDLinSOE::addA() - Matrix and ID not of similar sizes.\n')
             return -1
 
-        if fact==1.0: # do not need to multiply
-            for i in range(0, idSize):
-                col = id1[i] 
-                if col<self.size and col>=0 :
-                    colii = (col + 1) * self.half_band - 1 # col 是从0开始！才说得通
-                    minColRow = col - self.half_band + 1
-                    for j in range(0, idSize):
-                        row = id1[j]
-                        if row<self.size and row>=0 and row<=col and row>=minColRow:
-                            a = colii + (row-col)
-                            self.A[a] = self.A[a] + m[j,i]
-        else:
-            for i in range(0, idSize):
-                col = id1[i] 
-                if col<self.size and col>=0 :
-                    colii = (col + 1) * self.half_band - 1 # col 是从0开始？
-                    minColRow = col - self.half_band + 1
-                    for j in range(0, idSize):
-                        row = id1[j]
-                        if row<self.size and row>=0 and row<=col and row>=minColRow:
-                            a = colii + (row-col)
-                            self.A[a] = self.A[a] + m[j,i]*fact # 多了一个fact
+        for i in range(0, idSize):
+            row = id1[i] 
+            for j in range(0, idSize):
+                col = id1[j]
+                if row<=col:
+                    self.A[self.half_band-1+row-col] += m[j,i]*fact
+
         return 0
 
 
