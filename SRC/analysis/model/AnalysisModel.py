@@ -7,18 +7,18 @@ class AnalysisModel(MovableObject):
     def __init__(self):
         MovableObject.__init__(self, self.AnaMODEL_TAGS_AnalysisModel)
 
-        self._theFEs = ArrayOfTaggedObjects(256)
-        self._theDOFs = ArrayOfTaggedObjects(256)
+        self.theFEs = ArrayOfTaggedObjects(256)
+        self.theDOFs = ArrayOfTaggedObjects(256)
         
-        self._myDomain = None
-        self._myHandler = None
+        self.myDomain = None
+        self.myHandler = None
 
-        self._myDOFGraph = None
-        self._myGroupGraph = None
+        self.myDOFGraph = None
+        self.myGroupGraph = None
 
-        self._numFE_Ele = 0         # number of FE_Elements objects added
-        self._numDOF_Grp = 0        # number of DOF_Group objects added
-        self._numEqn = 0            # numEqn set by the ConstraintHandler typically
+        self.numFE_Ele = 0         # number of FE_Elements objects added
+        self.numDOF_Grp = 0        # number of DOF_Group objects added
+        self.numEqn = 0            # numEqn set by the ConstraintHandler typically
 
     # methods to populate/depopulate the AnalysisModel
     def addFE_Element(self, theFE_Ele):
@@ -27,11 +27,11 @@ class AnalysisModel(MovableObject):
         pass
     def clearAll(self):
         # if the graphs have been constructed, delete them
-        if(self._myDOFGraph!=None):
-            self._myDOFGraph = None
+        if(self.myDOFGraph!=None):
+            self.myDOFGraph = None
 
-        if(self._myGroupGraph!=None):
-            self._myGroupGraph = None
+        if(self.myGroupGraph!=None):
+            self.myGroupGraph = None
     
     def clearDOFGraph(self):
         pass
@@ -99,9 +99,10 @@ class AnalysisModel(MovableObject):
     #     pass
     def analysisStep(self, dT=0.0):
         # check to see there is a Domain linked to the Model
-        if(self._myDomain==None):
+        if(self.myDomain==None):
             print('WARNING: AnalysisModel::newStep. No domain linked.\n')
-        return self._myDomain.analysisStep(dT)
+        # invoke the method
+        return self.myDomain.analysisStep(dT)
 
     def eigenAnalysis(self, numMode, generalized, findSmallest):
         pass

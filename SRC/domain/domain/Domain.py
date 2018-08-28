@@ -1,4 +1,4 @@
-from tagged.MapOfTaggedObjects import MapOfTaggedObjects
+from SRC.tagged.MapOfTaggedObjects import MapOfTaggedObjects
 
 class Domain(object):
     def __init__(self):
@@ -18,7 +18,7 @@ class Domain(object):
         self.hasDomainChangedFlag = False      # a bool flag used to indicate if GeoTag needs to be ++
         self.lastGeoSendTag = -1               # the value of currentGeoTag when sendSelf was last invoked
 
-        self.nodeGraphBuiltFlag = False 
+        self.nodeGraphBuiltFlag = False # 干啥的？
         self.eleGraphBuiltFlag = False
 
     # methods to populate a domain (add components to a domain)
@@ -262,6 +262,7 @@ class Domain(object):
 
     def analysisStep(self, dT):
         return 0
+
     def eigenAnalysis(self, numMode, generalized, findSmallest):
         pass
         
@@ -271,12 +272,15 @@ class Domain(object):
         # if the flag, indicating the domain has changed since the last call to this method, has changed
         # increment the integer and reset the flag
         result = self.hasDomainChangedFlag
-        self.hasDomainChangedFlag = False
         if(result==True):
             self.currentGeoTag += 1
             self.nodeGraphBuiltFlag = False
             self.eleGraphBuiltFlag = False
+        # 复位
+        self.hasDomainChangedFlag = False
+        # return the integer so user can determine if domain has changed since their last call to this method
         return self.currentGeoTag
+
     def getDomainChangeFlag(self):
         pass
     def domainChange(self):

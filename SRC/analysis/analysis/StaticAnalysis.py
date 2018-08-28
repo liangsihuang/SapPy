@@ -1,40 +1,71 @@
-from analysis.analysis.Analysis import Analysis
+from SRC.analysis.analysis.Analysis import Analysis
 
 class StaticAnalysis(Analysis):
     def __init__(self, theDomain, theHandler, theNumberer, theModel, theSolnAlgo, theLinSOE, theStaticIntegrator, theConvergenceTest=0):
         super().__init__(theDomain)
-        self._theConstraintHandler = theHandler
-        self._theDOF_Numberer = theNumberer
-        self._theAnalysisModel = theModel
-        self._theAlgorithm = theSolnAlgo
-        self._theSOE = theLinSOE
-        self._theEigenSOE = None
-        self._theIntegrator = theStaticIntegrator
-        self._theTest = theConvergenceTest
+        self.theConstraintHandler = theHandler
+        self.theDOF_Numberer = theNumberer
+        self.theAnalysisModel = theModel
+        self.theAlgorithm = theSolnAlgo
+        self.theSOE = theLinSOE
+        self.theEigenSOE = None
+        self.theIntegrator = theStaticIntegrator
+        self.theTest = theConvergenceTest
 
-        self._domainStamp = 0
+        self.domainStamp = 0
     
     def clearAll(self):
         pass
 
     def analyze(self, numSteps):
         result = 0
-        the_Domain = self.getDomain()
+        theDomain = self.getDomain()
         for i in range(0,numSteps):
-            result = self._theAnalysisModel.analysisStep()
+            result = self.theAnalysisModel.analysisStep()
             if(result<0):
-                print('StaticAnalysis::analyze() - the AnalysisModel failed ')
-                print('at iteration: '+str(i)+' with domain at load factor ')
-                print(str(the_Domain.getCurrentTime())+'.\n')
-                the_Domain.revertToLastCommit()
+                print('StaticAnalysis::analyze() - the AnalysisModel failed at iteration: '+str(i))
+                print(' with domain at load factor '+str(theDomain.getCurrentTime())+'.\n')
+                theDomain.revertToLastCommit()
                 return -2
-        # check for change in Domain since last step. 
-        # As a change can occur in a commit() in a domaindecomp with load balancing
-        # this must now be inside the loop.
+            
+            stamp = theDomain.hasDomainChanged()
+            if(stamp!=self.domainStamp): 
+                self.domainStamp = stamp
+                result = self.domainChanged()
+                if result < 0:
+                    print('StaticAnalysis::analyze() - domainChanged failed at step '+str(i)+' of '+str(numSteps)+'.\n')
+                    return -1
 
-        stamp = the_Domain.hasDomainChanged()
-        if(stamp!=self._domainStamp): 
-            self._domainStamp = stamp
+            result = self.theIntegrator.newStep()
+            if result < 0:
+                print('StaticAnalysis::analyze() - the Integrator failed at iteration: '+str(i))
+                print(' with domain at load factor '+str(theDomain.getCurrentTime())+'.\n')
+                theDomain.revertToLastCommit()
+                self.theIntegrator.revertToLastStep()
+                return -2
+
+            result = self.theAlgorithm.solveCurrentStep()
+            if result < 0:
+                print('StaticAnalysis::analyze() - the Algorithm failed at iteration: '+str(i))
+                print(' with domain at load factor '+str(theDomain.getCurrentTime())+'.\n')
+                theDomain.revertToLastCommit()
+                self.theIntegrator.revertToLastStep() # 不是theAlgorithm
+                return -3
+            
+            result = self.theIntegrator.commit()
+            if result < 0:
+                print('StaticAnalysis::analyze() - the Integrator failed at iteration: '+str(i))
+                print(' with domain at load factor '+str(theDomain.getCurrentTime())+'.\n')
+                theDomain.revertToLastCommit()
+                self.theIntegrator.revertToLastStep()
+                return -4
+            
+            return 0
+
+
+
+
+
 
     def eigen(self):
         pass
@@ -43,22 +74,23 @@ class StaticAnalysis(Analysis):
 
     def domainChanged(self):
         result = 0
-        the_Domain = self.getDomain()
-        stamp = the_Domain.hasDomainChanged()
-        self._domainStamp = stamp
+        theDomain = self.getDomain()
+        stamp = theDomain.hasDomainChanged()
+        self.domainStamp = stamp
 
-        self._theAnalysisModel.clearAll()
-        self._theConstraintHandler.clearAll()
+        self.theAnalysisModel.clearAll()
+        self.theConstraintHandler.clearAll()
 
         # now we invoke handle() on the constraint handler which causes the creation of FE_Element
         # and DOF_Group objects and their addition to the AnalysisModel
-        result = self._theConstraintHandler.handle()
+        result = self.theConstraintHandler.handle()
         if(result<0):
             print('StaticAnalysis::domainChanged() - ConstraintHandler::handle() failed')
             return -1
         
         # now we invoke number() on the numberer which causes equation numbers to be assigned to all the
         # DOFs in the AnalysisModel.
+        
     
     def setNumberer(self, theNumberer):
         pass

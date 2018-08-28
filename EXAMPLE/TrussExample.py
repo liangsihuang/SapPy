@@ -1,8 +1,5 @@
-# import sys
-# sys.path.append('C:\\Users\\lyoshi\\Documents\\GitHub\\SapPy\\domain')
-from SRC.domain import
-from domain.Domain import Domain
-from domain.Node import Node
+from SRC.domain.domain.Domain import Domain
+from domain.Node import Node 
 from material.ElasticMaterial import ElasticMaterial
 from element.Truss import Truss
 from domain.SP_Constraint import SP_Constraint
