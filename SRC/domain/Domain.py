@@ -2,33 +2,33 @@ from tagged.MapOfTaggedObjects import MapOfTaggedObjects
 
 class Domain(object):
     def __init__(self):
-        self._theElements = MapOfTaggedObjects()
-        self._theNodes    = MapOfTaggedObjects()
-        self._theSPs      = MapOfTaggedObjects()
-        self._theMPs      = MapOfTaggedObjects()
-        self._thePCs      = MapOfTaggedObjects()
-        self._theLoadPatterns = MapOfTaggedObjects()
-        self._theParameters   = MapOfTaggedObjects()    
+        self.theElements = MapOfTaggedObjects()
+        self.theNodes    = MapOfTaggedObjects()
+        self.theSPs      = MapOfTaggedObjects()
+        self.theMPs      = MapOfTaggedObjects()
+        self.thePCs      = MapOfTaggedObjects()
+        self.theLoadPatterns = MapOfTaggedObjects()
+        self.theParameters   = MapOfTaggedObjects()    
 
-        self._currentTime = 0.0     # current pseudo time
-        self._committedTime = 0.0   # the committed pseudo time
-        self._dT = 0.0              # difference between committed and current time
+        self.currentTime = 0.0     # current pseudo time
+        self.committedTime = 0.0   # the committed pseudo time
+        self.dT = 0.0              # difference between committed and current time
 
-        self._currentGeoTag = 0                 # an integer used mark if domain has changed
-        self._hasDomainChangedFlag = False      # a bool flag used to indicate if GeoTag needs to be ++
-        self._lastGeoSendTag = -1               # the value of currentGeoTag when sendSelf was last invoked
+        self.currentGeoTag = 0                 # an integer used mark if domain has changed
+        self.hasDomainChangedFlag = False      # a bool flag used to indicate if GeoTag needs to be ++
+        self.lastGeoSendTag = -1               # the value of currentGeoTag when sendSelf was last invoked
 
-        self._nodeGraphBuiltFlag = False 
-        self._eleGraphBuiltFlag = False
+        self.nodeGraphBuiltFlag = False 
+        self.eleGraphBuiltFlag = False
 
     # methods to populate a domain (add components to a domain)
     def addNode(self, node):
         nodTag = node.getTag()
         # 先要看看 theNodes 里面有没有已经存在 node，输入 node 的节点号 nodTag
-        if(self._theNodes.hasComponent(nodTag)):
+        if(self.theNodes.hasComponent(nodTag)):
             print('node with tag '+str(nodTag)+' already exist in domain./n' )
         else:
-            self._theNodes.addComponent(node)
+            self.theNodes.addComponent(node)
             node.setDomain(self)
 
         # 还要： see if the physical bounds are changed
@@ -38,16 +38,16 @@ class Domain(object):
         # check all the element nodes exists in the domain
         nodes = element.getExternalNodes()
         for i in ragne(0,nodes.len()):
-            if(self._theNodes.hasComponent(nodes[i]):
+            if(self.theNodes.hasComponent(nodes[i]):
                 pass
             else:
                 print('WARNING Domain::addElement - In element '+str(eleTag))
                 print('\n no Node '+str(nodes[i])+' exists in the domain.\n')
         # check if an Element with a similar tag already exists in the Domain
-        if(self._theElements.hasComponent(eleTag)):
+        if(self.theElements.hasComponent(eleTag)):
             print('element with tag '+str(eleTag)+' already exist in domain./n')
         else:
-            self._theElements.addComponent(element)
+            self.theElements.addComponent(element)
             element.setDomain(self)
         
         # 还要：
@@ -58,7 +58,7 @@ class Domain(object):
         nodeTag = spConstraint.getNodeTag()
         dof = spConstraint.getDOF_Number()
         # check node exists in the domain
-        if(self._theNodes.hasComponent(nodeTag)):
+        if(self.theNodes.hasComponent(nodeTag)):
             pass
         else:
             print('Domain::addSP_Constraint - cannot add as node with tag ')
@@ -73,7 +73,7 @@ class Domain(object):
         found = False
         # theExistingSPs = self.getSPs()
         # for k, v in theExistingSPs.items():
-        for k, v in self._theSPs.items():
+        for k, v in self.theSPs.items():
             spNodeTag = v.getNodeTag()
             spDof = v.getDOF_Number()
             if(nodeTag == spNodeTag & dof == spDof):
@@ -82,11 +82,11 @@ class Domain(object):
             print('Domain::addSP_Constraint - cannot add as node already constrained in that dof by existing SP_Constraint.\n')
         # check that no other object with similar tag exists in model
         tag = spConstraint.getTag()
-        if(self._theSPs.hasComponent(tag)):
+        if(self.theSPs.hasComponent(tag)):
             print('Domain::addSP_Constraint - cannot add as constraint with tag ')
             print(str(tag)+' already exists in the domain.\n')
         else:
-            self._theSPs.addComponent(spConstraint)
+            self.theSPs.addComponent(spConstraint)
             spConstraint.setDomain(self)
 
     def addPressure_Constraint(self):
@@ -107,7 +107,7 @@ class Domain(object):
             print('Domain::addNodalLoad() - no node with tag '+str(nodTag)+' exists in the model.\n')
             print('Not adding the nodal load.')
         # now add it to the pattern
-        thePattern = self._theLoadPatterns.getComponent(pattern)
+        thePattern = self.theLoadPatterns.getComponent(pattern)
         if(thePattern == 0):
             print('Domain::addNodalLoad() - no pattern with tag '+str(pattern)+' exists in the model.\n')
             print('Not adding the nodal load.')
@@ -143,17 +143,17 @@ class Domain(object):
 
     # methods to access the components of a domain
     def getElements(self):
-        return self._theElements
+        return self.theElements
     def getNodes(self):
-        return self._theNodes
+        return self.theNodes
     def getPCs(self):
-        return self._thePCs
+        return self.thePCs
     def getMPs(self):
-        return self._theMPs
+        return self.theMPs
     def getSPs(self):
-        return self._theSPs
+        return self.theSPs
     def getLoadPatterns(self):
-        return self._theLoadPatterns
+        return self.theLoadPatterns
     def getDomainAndLoadPatternSPs():
         pass
     # def getParameters():
@@ -219,21 +219,21 @@ class Domain(object):
         pass
     def applyLoad(self, timeStep):
         # set the pseudo time in the domai to be newTime
-        self._currentTime = timeStep
-        self._dT = self._currentTime - self._committedTime
+        self.currentTime = timeStep
+        self.dT = self.currentTime - self.committedTime
         # first loop over nodes and elements getting them to first zero their loads
-        for tag, node in self._theNodes:
+        for tag, node in self.theNodes:
             node.zeroUnbalancedLoad()
-        for tag, ele in self._theElements:
+        for tag, ele in self.theElements:
             if(ele.isSubdomain()==False):
                 ele.zeroLoad()
         # now loop over load patterns, invoking applyLoad on them
-        for tag, loadPat in self._theLoadPatterns:
+        for tag, loadPat in self.theLoadPatterns:
             loadPat.applyLoad(timeStep)
         # finally loop over the MP_Constraints and SP_Constraints of the domain
         # for tag, theMP in self._theMPs:
             # theMP.applyConstraint(timeStep)
-        for tag, theSP in self._theSPs:
+        for tag, theSP in self.theSPs:
             theSP.applyConstraint(timeStep)
     
     def setLoadConstant(self):
@@ -249,9 +249,9 @@ class Domain(object):
         pass
     def revertToLastCommit(self):
         # first invoke revertToLastCommit on all nodes and elements in the domain
-        for tag, node in self._theNodes:
+        for tag, node in self.theNodes:
             node.revertToLastCommit()
-        for tag, ele in self._theElements:
+        for tag, ele in self.theElements:
             ele.revertToLastCommit()
         # set the current time and load factor in the domain to last commited
     def revertToStart(self):
@@ -270,13 +270,13 @@ class Domain(object):
     def hasDomainChanged(self):
         # if the flag, indicating the domain has changed since the last call to this method, has changed
         # increment the integer and reset the flag
-        result = self._hasDomainChangedFlag
-        self._hasDomainChangedFlag = False
+        result = self.hasDomainChangedFlag
+        self.hasDomainChangedFlag = False
         if(result==True):
-            self._currentGeoTag = self._currentGeoTag + 1
-            self._nodeGraphBuiltFlag = False
-            self._eleGraphBuiltFlag = False
-        return self._currentGeoTag
+            self.currentGeoTag += 1
+            self.nodeGraphBuiltFlag = False
+            self.eleGraphBuiltFlag = False
+        return self.currentGeoTag
     def getDomainChangeFlag(self):
         pass
     def domainChange(self):

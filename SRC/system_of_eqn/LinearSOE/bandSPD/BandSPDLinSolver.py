@@ -4,11 +4,8 @@ class BandSPDLinSolver(LinearSOESolver):
 
     def __init__(self,clasTag):
         super().__init__(clasTag)
-        self._theSOE = None
-    
-    def solve(self):
-        pass # pure virtual
+        self.theSOE = None
     
     def setLinearSOE(self, theBandSPDSOE):
-        self._theSOE = theBandSPDSOE
+        self.theSOE = theBandSPDSOE
         

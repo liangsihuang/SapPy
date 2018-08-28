@@ -1,3 +1,6 @@
+# import sys
+# sys.path.append('C:\\Users\\lyoshi\\Documents\\GitHub\\SapPy\\domain')
+from SRC.domain import
 from domain.Domain import Domain
 from domain.Node import Node
 from material.ElasticMaterial import ElasticMaterial
@@ -12,8 +15,8 @@ from analysis.LoadControl import LoadControl
 from analysis.PenaltyConstraintHandler import PenaltyConstraintHandler
 from graph.RCM import RCM
 from analysis.DOF_Numberer import DOF_Numberer
-from system.BandSPDLinLapackSolver import BandSPDLinLapackSolver
-from system.BandSPDLinSOE import BandSPDLinSOE
+from system_of_eqn.BandSPDLinLapackSolver import BandSPDLinLapackSolver
+from system_of_eqn.BandSPDLinSOE import BandSPDLinSOE
 from analysis.StaticAnalysis import StaticAnalysis
 
 theDomain = Domain()

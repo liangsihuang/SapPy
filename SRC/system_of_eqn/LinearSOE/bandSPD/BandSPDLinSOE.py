@@ -48,7 +48,7 @@ class BandSPDLinSOE(LinearSOE):
                 diff = vertexNum - otherNum # 不用加绝对值吗？ 可能theAdjacency只储存了节点号比本身小的
                 if(self.half_band < diff):
                     self.half_band = diff
-        self.half_band = self.half_band + 1 # include the diagonal
+        self.half_band += 1 # include the diagonal
 
         self.A = np.zeros((self.half_band,self.size), dtype=float) # rank-2 array
         self.Asize = self.half_band * self.size
@@ -74,7 +74,7 @@ class BandSPDLinSOE(LinearSOE):
     def addA(self, m, id1, fact = 1.0):
         # 刚度矩阵组装
         # m 是 Matrix 类，单元刚度矩阵
-        # id1 是 ID 类 , id是保留字，所以用id1，一个单元里所有节点的自由度=方程数
+        # id1 是 ID 类 , id是保留字，所以用id1，一个单元里所有节点的自由度=方程数，方程数从0开始
         # check for a quick return
         if fact == 0.0:
             return 0

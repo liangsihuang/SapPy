@@ -8,11 +8,5 @@ class LinearSOESolver(MovableObject):
     def __init__(self, clasTag):
         super().__init__(clasTag)
     
-    def solve(self):
-        pass # 纯虚
-    
-    def setSize(self):
-        pass # 纯虚
-    
     def getDeterminant(self):
         pass
