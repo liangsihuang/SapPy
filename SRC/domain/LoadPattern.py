@@ -1,38 +1,39 @@
-from domain.component.DomainComponent import DomainComponent
-from tagged.MapOfTaggedObjects import MapOfTaggedObjects
+from SRC.domain.component.DomainComponent import DomainComponent
+from SRC.tagged.storage.MapOfTaggedObjects import MapOfTaggedObjects
 
 class LoadPattern(DomainComponent):
     PATTERN_TAG_LoadPattern = 1
 
     def __init__(self, tag, fact=1.0):
-        DomainComponent.__init__(self, tag, self.PATTERN_TAG_LoadPattern)
-        self._isConstant = 1        # to indicate whether setConstant has been called
+        DomainComponent.__init__(self, tag, LoadPattern.PATTERN_TAG_LoadPattern)
+        self.isConstant = 1        # to indicate whether setConstant has been called
 
-        self._loadFactor = 0        # current load factor
-        self._scaleFactor = fact    # factor to scale load factor from time series
+        self.loadFactor = 0        # current load factor
+        self.scaleFactor = fact    # factor to scale load factor from time series
 
-        self._theSeries = None      # pointer to associated TimeSeries
+        self.theSeries = None      # pointer to associated TimeSeries
 
-        self._currentGeoTag = 0
-        self._lastGeoSendTag = -1
+        self.currentGeoTag = 0
+        self.lastGeoSendTag = -1
         # storage objects for the loads and constraints
-        self._theNodalLoads = MapOfTaggedObjects()          
-        self._theElementalLoads = MapOfTaggedObjects()
-        self._theSPs = MapOfTaggedObjects()
+        self.theNodalLoads = MapOfTaggedObjects()          
+        self.theElementalLoads = MapOfTaggedObjects()
+        self.theSPs = MapOfTaggedObjects()
 
     # methods to set the associated TimeSeries and Domain
     def setTimeSeries(self, theTimeSeries):
-        self._theSeries = theTimeSeries
+        self.theSeries = theTimeSeries
 
     def setDomain(self, theDomain):
         pass
     # methods to add loads
     def addNodalLoad(self, load):
         theDomain = self.getDomain()
-        self._theNodalLoads.addComponent(load)
+        self.theNodalLoads.addComponent(load)
         load.setDomain(theDomain)
         load.setPatternTag(self.getTag())
-        self._currentGeoTag = self._currentGeoTag + 1
+        self.currentGeoTag += 1
+        
     def addElementalLoad(self, load):
         pass
     def addSP_Constraint(self, theSP):

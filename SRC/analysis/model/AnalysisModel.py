@@ -1,5 +1,5 @@
-from actor.MovableObject import MovableObject
-from tagged.ArrayOfTaggedObjects import ArrayOfTaggedObjects
+from SRC.actor.MovableObject import MovableObject
+from SRC.tagged.storage.ArrayOfTaggedObjects import ArrayOfTaggedObjects
 
 # AnalysisModel: hold and provide access to the FE_Element and DOF_Group objects
 class AnalysisModel(MovableObject):
@@ -22,9 +22,44 @@ class AnalysisModel(MovableObject):
 
     # methods to populate/depopulate the AnalysisModel
     def addFE_Element(self, theFE_Ele):
-        pass
+        # check we don't add a null pointer or this is a subclass trying to use this method when it should'nt
+        if theFE_Ele == None or self.getFEs == None:
+            return False
+        # check if an Element with a similar tag already exists in the Domain
+        tag = theFE_Ele.getTag()
+        other = self.theFEs.getComponent(tag)
+        if other!=None:
+            print('AnalysisModel::addFE_Element - fe_element with tag '+str(tag)+' already exists in model.\n')
+            return False
+        # add 
+        result = self.theFEs.addComponent(theFE_Ele)
+        if result == True:
+            theFE_Ele.setAnalysisModel(self)
+            self.numFE_Ele += 1
+            return True
+        else:
+            return False
+
     def addDOF_Group(self, theDOF_Grp):
-        pass
+        # check we don't add a null pointer or this is a subclass trying to use a method it should'nt be using
+        if theDOF_Grp == None or self.theDOFs == None:
+            return False
+        
+        # check if a DOF_Group with a similar tag already exists in the Model
+        tag = theDOF_Grp.getTag()
+        other = self.theDOFs.getComponent(tag)
+        if other!=None:
+            print('AnalysisModel::addDOF_Group - dof_group with tag '+str(tag)+' already exists in model.\n')
+            return False
+        
+        # add
+        result = self.theDOFs.addComponent(theDOF_Grp)
+        if result == True:
+            self.numDOF_Grp += 1
+            return True
+        else:
+            return False
+
     def clearAll(self):
         # if the graphs have been constructed, delete them
         if(self.myDOFGraph!=None):

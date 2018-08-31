@@ -12,17 +12,17 @@ class FE_Element(TaggedObject):
     def __init__(self, tag, ele):
         super().__init__(tag)
         # protected variables - a copy for each object of the class  
-        self._myDOF_Groups = np.size(ele.getExternalNodes())
-        self._myID = np.zeros((ele.getNumDOF(),), dtype=int)
+        self.myDOF_Groups = np.size(ele.getExternalNodes())
+        self.myID = np.zeros((ele.getNumDOF(),), dtype=int)
         # private variables - a copy for each object of the class  
-        self._numDOF = ele.getNumDOF()
-        self._theModel = None
-        self._myEle = ele
-        self._theResidual = None # vector
-        self._theTangent = None # matrix
-        self._theIntegrator = None # needed for subdomain???
+        self.numDOF = ele.getNumDOF()
+        self.theModel = None
+        self.myEle = ele
+        self.theResidual = None # vector
+        self.theTangent = None # matrix
+        self.theIntegrator = None # needed for subdomain???
 
-        if(self._numDOF<=0):
+        if(self.numDOF<=0):
             print('FE_Element::FE_Element() - element must have 1 dof')
         
         # get element domain and check if it is valid

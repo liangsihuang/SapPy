@@ -1,67 +1,67 @@
-from domain.component.DomainComponent import DomainComponent
+from SRC.domain.component.DomainComponent import DomainComponent
 
 class Node(DomainComponent):
     NOD_TAG_Node = 1
     def __init__(self, tag, ndof, Crd1, Crd2):
-        DomainComponent.__init__(self, tag, self.NOD_TAG_Node)
-        self._numberDOF = ndof          # number of dof at Node
-        self._theDOF_Group = None    # pointer to associated DOF_Group
-        self._Crd = [Crd1, Crd2]        # original nodal coords, vector
+        DomainComponent.__init__(self, tag, Node.NOD_TAG_Node)
+        self.numberDOF = ndof          # number of dof at Node
+        self.theDOF_Group = None    # pointer to associated DOF_Group
+        self.Crd = [Crd1, Crd2]        # original nodal coords, vector
 
-        self._commitDisp = []
-        self._commitVel = []
-        self._commitAccel = []
+        self.commitDisp = []
+        self.commitVel = []
+        self.commitAccel = []
 
-        self._trialDisp = []
-        self._trialVel = []
-        self._trialAccel = []    
+        self.trialDisp = []
+        self.trialVel = []  
+        self.trialAccel = []    
 
-        self._unbalLoad = []        # unbalanced load
-        self._incrDisp = []
-        self._incrDeltaDisp = []
+        self.unbalLoad = []        # unbalanced load
+        self.incrDisp = []
+        self.incrDeltaDisp = []
 
-        self._disp = [] # double arrays holding the disp, vel and accel value
-        self._vel = []
-        self._accel = []
+        self.disp = [] # double arrays holding the disp, vel and accel value
+        self.vel = []
+        self.accel = []
 
-        self._dbTag1 = 0 # needed for database
-        self._dbTag2 = 0
-        self._dbTag3 = 0
-        self._dbTag4 = 0
+        # self.dbTag1 = 0 # needed for database
+        # self.dbTag2 = 0
+        # self.dbTag3 = 0
+        # self.dbTag4 = 0
 
-        self._R = None        # nodal participation matrix
-        self._mass = None     # mass matrix
-        self._unbalLoadWithInertia = []
-        self._alphaM = 0        # rayleigh damping factor
-        self._theEigenvectors = None 
+        self.R = None        # nodal participation matrix
+        self.mass = None     # mass matrix
+        self.unbalLoadWithInertia = []
+        self.alphaM = 0        # rayleigh damping factor
+        self.theEigenvectors = None 
 
-        self._reaction = []
-        self._displayLocation = []
+        self.reaction = []
+        self.displayLocation = []
 
     # public methods dealing with the DOF at the node
     def getNumberDOF(self):
-        return self._numberDOF
+        return self.numberDOF
     def setDOF_Group(self, theDOF_Grp):
-        self._theDOF_Group = theDOF_Grp
+        self.theDOF_Group = theDOF_Grp
     def getDOF_Group(self):
-        return self._theDOF_Group
+        return self.theDOF_Group
 
     # public methods for obtaining the nodal coordinates
     def getCrds(self):
-        return self._Crd
+        return self.Crd
     def getDisplayCrds(self, results, fact):
         pass
     def setDisplayCrds(self, theCrds):
         pass
     # public methods for obtaining committed and trial response quantities of the node
     def getDisp(self):
-        
+        pass
     # public methods for updating the trial response quantities
     # public methods for adding and obtaining load information
     def zeroUnbalancedLoad(self):
-        if(self._unbalLoad!=[]):
-            for i in range(0,len(self._unbalLoad)):
-                self._unbalLoad[i] = 0.0
+        if(self.unbalLoad!=[]):
+            for i in range(0,len(self.unbalLoad)):
+                self.unbalLoad[i] = 0.0
 
     # public methods dealing with the commited state of the node
     def commitState(self):
@@ -69,11 +69,11 @@ class Node(DomainComponent):
 
     def revertToLastCommit(self):
         # check disp exists, if does set trial = last commit, incr = 0
-        if(self._disp!=[]):
-            for i in range(0,self._numberDOF):
-                self._disp[i] = self._disp[i+self._numberDOF]
-                self._disp[i+2*self._numberDOF] = 0.0
-                self._disp[i+3*self._numberDOF] = 0.0
+        if(self.disp!=[]):
+            for i in range(0,self.numberDOF):
+                self.disp[i] = self.disp[i+self.numberDOF]
+                self.disp[i+2*self.numberDOF] = 0.0
+                self.disp[i+3*self.numberDOF] = 0.0
         # check vel exists, if does set trial = last commit
         # check accel exists, if does set trial = last commit
 

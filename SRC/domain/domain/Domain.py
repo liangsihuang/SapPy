@@ -57,22 +57,23 @@ class Domain(object):
     def addSP_Constraint(self, spConstraint):
         nodeTag = spConstraint.getNodeTag()
         dof = spConstraint.getDOF_Number()
+
         # check node exists in the domain
         if(self.theNodes.hasComponent(nodeTag)):
             pass
         else:
             print('Domain::addSP_Constraint - cannot add as node with tag ')
             print(str(nodeTag)+' dose not exist in the domain.\n')
+
         # check that the DOF specified exists at the Node
         node = self.getNode(nodeTag)
         numDOF = node.getTag()
         if(numDOF<dof):
             print('Domain::addSP_Constraint - cannnot add as node with tag ')
             print(str(nodeTag)+' does not have associated constrainted DOF\n')
+
         # check if an exsiting SP_Constraint exists for that dof at the node
         found = False
-        # theExistingSPs = self.getSPs()
-        # for k, v in theExistingSPs.items():
         for k, v in self.theSPs.items():
             spNodeTag = v.getNodeTag()
             spDof = v.getDOF_Number()
@@ -80,6 +81,7 @@ class Domain(object):
                 found = True
         if(found == True):
             print('Domain::addSP_Constraint - cannot add as node already constrained in that dof by existing SP_Constraint.\n')
+            
         # check that no other object with similar tag exists in model
         tag = spConstraint.getTag()
         if(self.theSPs.hasComponent(tag)):
@@ -154,8 +156,11 @@ class Domain(object):
         return self.theSPs
     def getLoadPatterns(self):
         return self.theLoadPatterns
-    def getDomainAndLoadPatternSPs():
-        pass
+    def getDomainAndLoadPatternSPs(self):
+        return self.theSPs
+        # 怎么return loadPattern 里面的 theSPs ，loadPattern的个数并不确定，怎么办？
+        
+
     # def getParameters():
     #     pass
     def getElement(self, tag):

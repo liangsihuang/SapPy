@@ -1,36 +1,32 @@
 from tagged.TaggedObject import TaggedObject
 import numpy as np
 
-# DOF_Group:
-# 1. keep track of 
+
 class DOF_Group(TaggedObject):
     # static variables - single copy for all objects of the class
     numDOFs = 0
 
     def __init__(self, tag, node):
-        super().__init__(tag)
+        super().__init__(tag) # tag 从0开始
         
         # protected variables - a copy for each object of the class  
-        self._unbalance = None
-        self._tangent = None
-        self._myNode = node
+        self.unbalance = None
+        self.tangent = None
+        self.myNode = node
 
         # private variables - a copy for each object of the class  
-        self._myID = np.zeros((node.getNumberDOF(),),dtype=int)
-        self._numDOF = node.getNumberDOF()
+        self.myID = np.zeros((node.getNumberDOF(),),dtype=int)
+        self.numDOF = node.getNumberDOF()
 
         # get number of DOF & verify valid
         numDOF = node.getNumberDOF()
         if(numDOF <= 0):
             print('DOF_Group::DOF_Group() - node must have at least 1 dof. \n')
         
-        # # check the ID created is of appropriate size
-        # if(self._myID.Size()!=numDOF):
-        #     print('DOF_Group::DOF_Group() - ran out of memory creating ID for node. \n')
         
         # initially set all the IDs to be -2
         for i in range(0, numDOF):
-            self._myID[i] = -2
+            self.myID[i] = -2
         
         # if this is the first DOF_Group, we now create the arrays used to store pointers to 
         # class wide matrix and vector objects used to return tangent and residual
@@ -41,7 +37,7 @@ class DOF_Group(TaggedObject):
     def setID(self, dof, value):
         pass
     def getID(self):
-        pass
+        return self.myID
     def doneID(self):
         pass
     

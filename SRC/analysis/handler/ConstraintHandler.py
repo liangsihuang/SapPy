@@ -20,9 +20,6 @@ class ConstraintHandler(MovableObject):
         # iterate through the FE_Element getting them to set their IDs
         for theEle in self.theAnalysisModel.getFEs():
             theEle.setID()
-
-    def clearAll(self):
-        pass # 纯虚
     
     def getDomain(self):
         return self.theDomain
