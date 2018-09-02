@@ -1,7 +1,7 @@
 from SRC.analysis.handler.ConstraintHandler import ConstraintHandler
 from SRC.analysis.model.DOF_Group import DOF_Group
-from SRC.analysis.model.FE_Element import FE_Element
-from SRC.analysis.model.PenaltySP_FE import PenaltySP_FE
+from SRC.analysis.model.fe_ele.FE_Element import FE_Element
+from SRC.analysis.model.fe_ele.PenaltySP_FE import PenaltySP_FE
 
 class PenaltyConstraintHandler(ConstraintHandler):
     HANDLER_TAG_PenaltyConstraintHandler = 3

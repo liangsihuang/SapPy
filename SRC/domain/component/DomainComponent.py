@@ -1,18 +1,18 @@
-from tagged.TaggedObject import TaggedObject
-from actor.MovableObject import MovableObject
+from SRC.tagged.TaggedObject import TaggedObject
+from SRC.actor.MovableObject import MovableObject
 
 class DomainComponent(TaggedObject, MovableObject):
     
     def __init__(self, tag, clasTag):
         TaggedObject.__init__(tag)
         MovableObject.__init__(clasTag)
-        self._theDomain = None
+        self.theDomain = None
     
     def setDomain(self, model):
-        self._theDomain = model
+        self.theDomain = model
     
     def getDomain(self):
-        return self._theDomain
+        return self.theDomain
 
 
 

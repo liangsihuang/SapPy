@@ -1,4 +1,4 @@
-from element.Element import Element
+from SRC.element.Element import Element
 import numpy as np
 
 class Truss(Element):
@@ -6,16 +6,16 @@ class Truss(Element):
 
     def __init__(self, tag, dim, Nd1, Nd2, theMaterial, A, r=0.0, damp=0, cm=0):
         super().__init__(tag, Truss.ELE_TAG_Truss)
-        self._theMaterial = theMaterial
-        self._connectedExternalNodes = np.array([Nd1, Nd2])
-        self._dimension = dim   # truss in 2 or 3d domain
-        self._numDOF = 0        # number of dof for truss ??
+        self.theMaterial = theMaterial
+        self.connectedExternalNodes = np.array([Nd1, Nd2])
+        self.dimension = dim   # truss in 2 or 3d domain
+        self.numDOF = 0        # number of dof for truss ??
 
-        self._theLoad = None    # pointer to the load vector P
-        self._theMatrix = None  # pointer to objects matrix (a class wide Matrix) ??
-        self._theVector = None  # pointer to objects vector (a class wide Vector) ??
+        self.theLoad = None    # pointer to the load vector P
+        self.theMatrix = None  # pointer to objects matrix (a class wide Matrix) ??
+        self.theVector = None  # pointer to objects vector (a class wide Vector) ??
 
-        self._L = 0.0       # length of truss based on undeformed configuration
+        self.L = 0.0       # length of truss based on undeformed configuration
         self._A = A         # area of truss
         self._rho = r       # rho: mass density per unit length
 
