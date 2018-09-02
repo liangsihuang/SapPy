@@ -77,8 +77,10 @@ class AnalysisModel(MovableObject):
         return self.numDOF_Grp
     def getDOF_GroupPtr(self, tag):
         pass
+
     def getFEs(self):
         pass
+        
     def getDOFs(self):
         pass
     # methods to access the connectivity for SysOfEqn to size itself

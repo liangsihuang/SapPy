@@ -26,17 +26,41 @@ class IncrementalIntegrator(Integrator):
     
     # methods to set up the system of equations
     def formTangent(self, statFlag = CURRENT_TANGENT):
-        result = 0
         self.statusFlag = statFlag
+
         if ((self.theAnalysisModel==None) or (self.theSOE==None)):
             print('WARNING IncrementalIntegrator::formTangent() - no AnalysisModel or LinearSOE have been set. \n')
+            return -1
         
         # zero the A matrix of the linearSOE
+        self.theSOE.zeroA()
+        
+        # the loops to form and add the tangents are broken into two for efficiency when performing parallel computations - CHANGE
+        # loop through the FE_Elements adding their contributions to the tangent
+        theEles2 = self.theAnalysisModel.getFEs()
+        for ele in theEles2:
+            result = self.theSOE.addA(ele.getTangent(self), ele.getID())
+            if result < 0:
+                print('WARNING IncrementalIntegrator::formTangent - failed in addA for ID '+str(ele.getID())+' .\n')
+                return -3
 
+        return 0
     
     def formUnbalance(self):
-        pass
-    
+        if self.theAnalysisModel == None or self.theSOE == None:
+            print('WARNING IncrementalIntegrator::formUnbalance - no AnalysisModel or LinearSOE has been set.\n')
+            return -1
+        self.theSOE.zeroB()
+
+        if self.formElementResidual() < 0:
+            print('WARNING IncrementalIntegrator::formUnbalance - this->formElementResidual failed.\n')
+            return -1
+        
+        if self.formNodalUnbalance() < 0:
+            print('WARNING IncrementalIntegrator::formUnbalance - this->formNodalUnbalance failed.\n')
+            return -2
+        
+        return 0
     # pure virtual methods to define the FE_Ele and DOF_Group contributions
     # 在父类中定义了
 
@@ -52,5 +76,19 @@ class IncrementalIntegrator(Integrator):
     def initialize(self):
         pass
     
+    def formElementResidual(self):
+        # loop through the FE_Elements and add the residual
+        theEles2 = self.theAnalysisModel.getFEs()
+        for ele in theEles2:
+            result = self.theSOE.addB(ele.getResidual(self), ele.getID())
+            if result < 0:
+                print('WARNING IncrementalIntegrator::formElementResidual - failed in addB for ID '+str(ele.getID())+'.\n')
+                return -2
+        return 0
+    
+    def formNodalUnbalance(self):
+        # loop through the DOF_Groups and add the unbalance
+        theDOFs = self.theAnalysisModel.getDOFs()
+        
 
     
