@@ -1,11 +1,11 @@
-from actor.MovableObject import MovableObject
+from SRC.actor.MovableObject import MovableObject
 
 class SolutionAlgorithm(MovableObject):
 
     def __init__(self, clasTag):
         super().__init__(self, clasTag)
-        self._theRecorders = None
-        self._numRecorders = 0
+        self.theRecorders = None
+        self.numRecorders = 0
 
     def domainChanged(self):
         return 0 # 有鬼用

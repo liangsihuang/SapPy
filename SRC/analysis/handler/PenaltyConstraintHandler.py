@@ -62,11 +62,12 @@ class PenaltyConstraintHandler(ConstraintHandler):
             theModel.addFE_Element(fe)
         
         # create the PenaltySP_FE for the SP_Constraints and add to the AnalysisModel
-        theSPs = theDomain.getDomainAndLoadPatternSPs() # 这里getDomainAndLoadPatternSPs()其实只返回了domain的，没有返回loadPattern的
-        for tag, sp in theSPs:
-            fe = PenaltySP_FE(numFeEle, theDomain, sp, self.alphaSP)
-            theModel.addFE_Element(fe)
-            numFeEle += 1
+        theSPsList = theDomain.getDomainAndLoadPatternSPs()
+        for theSPs in theSPsList:
+            for tag, sp in theSPs:
+                fe = PenaltySP_FE(numFeEle, theDomain, sp, self.alphaSP)
+                theModel.addFE_Element(fe)
+                numFeEle += 1
 
         # create the PenaltyMP_FE for the MP_Constraints and add to the AnalysisModel
         # MP_Constraint 暂时不编

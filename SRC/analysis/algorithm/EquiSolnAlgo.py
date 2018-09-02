@@ -1,41 +1,41 @@
-from analysis.algorithm.SolutionAlgorithm import SolutionAlgorithm
+from SRC.analysis.algorithm.SolutionAlgorithm import SolutionAlgorithm
 
 class EquiSolnAlgo(SolutionAlgorithm):
 
     def __init__(self, clasTag):
         super().__init__(self, clasTag)
 
-        self._theModel = None
-        self._theIntegrator = None
-        self._theSysOfEqn = None
-        self._theTest = None
+        self.theModel = None
+        self.theIntegrator = None
+        self.theSysOfEqn = None
+        self.theTest = None
     
     def setLinks(self, theNewModel, theNewIntegrator, theSOE, theConvergenceTest):
-        self._theModel = theNewModel
-        self._theIntegrator = theNewIntegrator
-        self._theSysOfEqn = theSOE
-        self._theTest = theConvergenceTest
+        self.theModel = theNewModel
+        self.theIntegrator = theNewIntegrator
+        self.theSysOfEqn = theSOE
+        self.theTest = theConvergenceTest
 
     def solveCurrentStep(self):
         pass # 纯虚函数
 
     def setConvergenceTest(self, theConvergenceTest):
-        self._theTest = theConvergenceTest
+        self.theTest = theConvergenceTest
     
     def getConvergenceTest(self):
-        return self._theTest
+        return self.theTest
     
     def Print(self):
         pass # 纯虚函数
 
     def getAnalysisModel(self):
-        return self._theModel
+        return self.theModel
 
     def getIncrementalIntegrator(self):
-        return self._theIntegrator
+        return self.theIntegrator
 
     def getLinearSOE(self):
-        return self._theSysOfEqn
+        return self.theSysOfEqn
     
 
 

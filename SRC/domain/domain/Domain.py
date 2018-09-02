@@ -157,8 +157,12 @@ class Domain(object):
     def getLoadPatterns(self):
         return self.theLoadPatterns
     def getDomainAndLoadPatternSPs(self):
-        return self.theSPs
-        # 怎么return loadPattern 里面的 theSPs ，loadPattern的个数并不确定，怎么办？
+        allSPs = []
+        allSPs.append(self.theSPs)
+        for key, value in self.theLoadPatterns:
+            allSPs.append(value)
+        return allSPs
+        # 怎么return loadPattern 里面的 theSPs ，loadPattern的个数并不确定，怎么办？ 返回一个 list
         
 
     # def getParameters():
@@ -166,7 +170,7 @@ class Domain(object):
     def getElement(self, tag):
         pass
     def getNode(self, tag):
-        return self._theNodes.get(tag, defalut=0)
+        return self.theNodes.get(tag, defalut=0)
     def getSP_Constraint(self, tag):
         pass
     def getPressure_Constraint(self, tag):
@@ -178,7 +182,7 @@ class Domain(object):
 
     # methods to query the state of the domain
     def getCurrentTime(self):
-        return self._currentTime
+        return self.currentTime
     def getCommitTag(self):
         pass
     def getNumElements(self):
@@ -222,8 +226,9 @@ class Domain(object):
         pass
     def setCommittedTime(self, newTime):
         pass
+        
     def applyLoad(self, timeStep):
-        # set the pseudo time in the domai to be newTime
+        # set the pseudo time in the domain to be newTime
         self.currentTime = timeStep
         self.dT = self.currentTime - self.committedTime
         # first loop over nodes and elements getting them to first zero their loads
@@ -287,11 +292,13 @@ class Domain(object):
         return self.currentGeoTag
 
     def getDomainChangeFlag(self):
-        pass
+        return self.hasDomainChangedFlag
+
     def domainChange(self):
-        pass
-    def setDomainChangeStamp(self):
-        pass
+        self.hasDomainChangedFlag = True
+
+    def setDomainChangeStamp(self, newStamp):
+        self.currentGeoTag = newStamp
         
     # methods for output
     # nodal methods required in domain interface for parallel interpreter
