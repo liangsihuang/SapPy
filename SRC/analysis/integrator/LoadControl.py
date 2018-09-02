@@ -37,3 +37,24 @@ class LoadControl(StaticIntegrator):
 
         self.numIncrLastStep = 0
         return 0
+    
+    def update(self, deltaU):
+        # deltaU 是 Vector
+        myModel = self.getAnalysisModel()
+        theSOE = self.getLinearSOE()
+        if myModel==None or theSOE==None:
+            print('WARNING LoadControl::update() - No AnalysisModel or LinearSOE has been set.\n')
+            return -1
+        
+        myModel.incrDisp(deltaU)
+        if myModel.updateDomain() < 0:
+            print('LoadControl::update - model failed to update for new dU.\n')
+            return -1
+        
+        # set deltaU for the convergence test
+        theSOE.setX(deltaU)
+        self.numIncrLastStep += 1
+        return 0
+    
+    
+

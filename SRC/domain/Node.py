@@ -57,6 +57,31 @@ class Node(DomainComponent):
     def getDisp(self):
         pass
     # public methods for updating the trial response quantities
+    def incrTrialDisp(self, incrDispl):
+        # incrDispl 是 Vector
+        # check vector arg is of correct size
+        if incrDispl.Size() != self.numberDOF:
+            print('WARNING Node::incrTrialDisp() - incompatable sizes.\n')
+            return -2
+        # create a copy if no trial exists andd add committed
+        if self.trialDisp == None:
+            if self.createDisp() < 0:
+                print('FATAL Node::incrTrialDisp() - ran out of memory.\n')
+                exit(self, -1) #???
+            for i in range(0, self.numberDOF):
+                incrDispI = incrDispl(i)
+                self.disp[i] = incrDispI
+                self.disp[i+2*self.numberDOF] = incrDispI
+                self.disp[i+3*self.numberDOF] = incrDispI
+            return 0
+        # otherwise set trial = incr + trial
+        for i in range(0, self.numberDOF):
+            incrDispI = incrDispl(i)
+            self.disp[i] += incrDispI
+            self.disp[i+2*self.numberDOF] += incrDispI
+            self.disp[i+3*self.numberDOF] = incrDispI
+        return 0
+
     # public methods for adding and obtaining load information
     def zeroUnbalancedLoad(self):
         if(self.unbalLoad!=[]):
@@ -89,11 +114,11 @@ class Node(DomainComponent):
 
     # private methods used to create the Vector objects 
     # for the committed and trial response quantities.
-    def _createDisp(self):
+    def createDisp(self):
         pass
-    def _createVel(self):
+    def createVel(self):
         pass
-    def _createAccel(self):
+    def createAccel(self):
         pass
 
 

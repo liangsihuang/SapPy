@@ -67,10 +67,17 @@ class IncrementalIntegrator(Integrator):
     # methods to update the domain
     def newStep(self, deltaT):
         pass
+
     def update(self, deltaU):
         pass # 纯虚
+        
     def commit(self):
-        pass
+        if self.theAnalysisModel == None:
+            print('WARNING IncrementalIntegrator::commit() - no AnalysisModel object associated with this object.\n')
+            return -1
+        return self.theAnalysisModel.commitDomain()
+        
+
     def revertToLastStep(self):
         pass
     def initialize(self):
@@ -89,6 +96,13 @@ class IncrementalIntegrator(Integrator):
     def formNodalUnbalance(self):
         # loop through the DOF_Groups and add the unbalance
         theDOFs = self.theAnalysisModel.getDOFs()
+        for dof in theDOFs:
+            result = self.theSOE.addB(dof.getUnbalance(self), dof.getID())
+            if result < 0:
+                print('WARNING IncrementalIntegrator::formNodalUnbalance - failed in addB for ID '+str(dof.getID())+'.\n')
+                return -2    
+        return 0
+    
         
 
     

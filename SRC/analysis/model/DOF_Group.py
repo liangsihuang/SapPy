@@ -31,7 +31,7 @@ class DOF_Group(TaggedObject):
         # if this is the first DOF_Group, we now create the arrays used to store pointers to 
         # class wide matrix and vector objects used to return tangent and residual
 
-        DOF_Group.numDOFs = DOF_Group.numDOFs + 1
+        DOF_Group.numDOFs += 1
         
         
     def setID(self, dof, value):
@@ -96,7 +96,28 @@ class DOF_Group(TaggedObject):
         pass
     
     def incrNodeDisp(self, u):
-        pass
+        # u 是 Vector
+        if self.myNode == None:
+            print('DOF_Group::setNodeDisp: 0 Node Pointer.\n')
+        
+        disp = self.unbalance
+        # disp 是 Vector
+        if disp.Size() == 0:
+            print('DOF_Group::setNodeIncrDisp - out of space.\n')
+            return
+        
+        # get disp for my dof out of vector u
+        for i in range(0, self.numDOF):
+            loc = self.myID(i)
+            if loc >= 0:
+                disp[i] = u[loc]
+            else:
+                disp[i] = 0.0
+        
+        self.myNode.incrTrialDisp(disp)
+    
+
+
     def incrNodeVel(self, udot):
         pass
     def incrNodeAccel(self, Udotdot):
