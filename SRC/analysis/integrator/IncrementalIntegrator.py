@@ -1,4 +1,4 @@
-from analysis.integrator.Integrator import Integrator
+from SRC.analysis.integrator.Integrator import Integrator
 
 class IncrementalIntegrator(Integrator):
     CURRENT_TANGENT = 0
@@ -10,16 +10,16 @@ class IncrementalIntegrator(Integrator):
 
     def __init__(self, clasTag):
         super().__init__(self, clasTag)
-        self._statusFlag = self.CURRENT_TANGENT
+        self.statusFlag = self.CURRENT_TANGENT
 
-        self._theSOE = None
-        self._theAnalysisModel = None
-        self._theTest = None
+        self.theSOE = None
+        self.theAnalysisModel = None
+        self.theTest = None
 
     def setLinks(self, theModel, theLinSOE, theConvergenceTest):
-        self._theAnalysisModel = theModel
-        self._theSOE = theLinSOE
-        self._theTest = theConvergenceTest
+        self.theAnalysisModel = theModel
+        self.theSOE = theLinSOE
+        self.theTest = theConvergenceTest
     
     def setEigenSOE(self):
         pass
@@ -27,8 +27,8 @@ class IncrementalIntegrator(Integrator):
     # methods to set up the system of equations
     def formTangent(self, statFlag = CURRENT_TANGENT):
         result = 0
-        self._statusFlag = statFlag
-        if ((self._theAnalysisModel==None) or (self._theSOE==None)):
+        self.statusFlag = statFlag
+        if ((self.theAnalysisModel==None) or (self.theSOE==None)):
             print('WARNING IncrementalIntegrator::formTangent() - no AnalysisModel or LinearSOE have been set. \n')
         
         # zero the A matrix of the linearSOE

@@ -1,4 +1,4 @@
-from analysis.integrator.IncrementalIntegrator import IncrementalIntegrator
+from SRC.analysis.integrator.IncrementalIntegrator import IncrementalIntegrator
 
 class StaticIntegrator(IncrementalIntegrator):
     def __init__(self, clasTag):

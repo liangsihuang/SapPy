@@ -1,14 +1,39 @@
-from analysis.integrator.StaticIntegrator import StaticIntegrator
+from SRC.analysis.integrator.StaticIntegrator import StaticIntegrator
 
 class LoadControl(StaticIntegrator):
     INTEGRATOR_TAGS_LoadControl = 6
     def __init__(self, dLambda, numIncr, minLambda, maxLambda):
         StaticIntegrator.__init__(self, self.INTEGRATOR_TAGS_LoadControl)
-        self._deltaLambda = dLambda
-        self._specNumIncrStep = numIncr
-        self._dLambdaMin = minLambda
-        self._dLambdaMax = maxLambda
+        self.deltaLambda = dLambda
+        self.specNumIncrStep = numIncr # Jd
+        self.numIncrLastStep = numIncr # J(i-1)
+        self.dLambdaMin = minLambda # min values for dlambda at step(i)
+        self.dLambdaMax = maxLambda # max ...
+
+        # to avoid divide-by-zero error on first update() ensure numIncr != 0
+        if numIncr == 0 :
+            print('WARNING LoadControl::LoadControl() - numIncr set to 0, 1 assumed.\n')
+            self.specNumIncrStep = 1.0
+            self.numIncrLastStep = 1.0
 
 
-    def setTimeSeries(self, theSeries):
-        pass
+    def newStep(self):
+        theModel = self.theAnalysisModel
+        if theModel == None:
+            print('LoadControl::newStep() - no associated AnalysisModel.\n')
+            return -1
+        # determine delta lambda for this step based on dLambda and #iter of last step
+        factor = self.specNumIncrStep / self.numIncrLastStep
+        self.deltaLambda *= factor
+
+        if self.deltaLambda < self.dLambdaMin:
+            self.deltaLambda = self.dLambdaMin
+        elif self.deltaLambda > self.dLambdaMax:
+            self.deltaLambda = self.dLambdaMax
+
+        currentLambda = theModel.getCurrentDomainTime()
+        currentLambda += self.deltaLambda
+        theModel.applyLoadDomain(currentLambda)
+
+        self.numIncrLastStep = 0
+        return 0

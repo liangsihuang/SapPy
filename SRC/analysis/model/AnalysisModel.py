@@ -74,7 +74,7 @@ class AnalysisModel(MovableObject):
         pass
     # methods to access the FE_Elements and DOF_Groups and their numbers
     def getNumDOF_Groups(self):
-        return self._numDOF_Grp
+        return self.numDOF_Grp
     def getDOF_GroupPtr(self, tag):
         pass
     def getFEs(self):
@@ -126,8 +126,16 @@ class AnalysisModel(MovableObject):
     # methods which trigger operations in the Domain
     def setLinks(self, theDomain, theHandler):
         pass
-    def applyLoadDomain(self, newTime):
-        pass
+
+    def applyLoadDomain(self, pseudoTime):
+        # check to see there is a Domain linked to the Model
+        if self.myDomain == None:
+            print('WARNING: AnalysisModel::applyLoadDomain - No Domain linked.\n')
+            return None
+        
+        self.myDomain.applyLoad(pseudoTime)
+        self.myHandler.applyLoad()
+
     def updateDomain(self):
         pass
     # def updateDomain(self, newTime, dT):
@@ -145,8 +153,14 @@ class AnalysisModel(MovableObject):
         pass
     def revertDomainToLastCommit(self):
         pass
+
     def getCurrentDomainTime(self):
-        pass
+        # check to see there is a Domain linked to the Model
+        if self.myDomain == None:
+            print('WARNING: AnalysisModel::getCurrentDomainTime - No Domain linked.\n')
+            return None
+        return self.myDomain.getCurrentTime()
+
     def setCurrentDomainTime(self, newTime):
         pass
     def setRayleighDampingFactors(self, alphaM, betaK, betaKi, betaKc):
