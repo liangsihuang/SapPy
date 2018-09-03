@@ -105,7 +105,11 @@ class AnalysisModel(MovableObject):
         pass
 
     def incrDisp(self, disp):
-        pass
+        # disp 是 Vector
+        theDOFGrps = self.getDOFs()
+        for dof in theDOFGrps:
+            dof.incrNodeDisp(disp)
+
     def incrVel(self, vel):
         pass
     def incrAccel(self, accel):
@@ -151,8 +155,18 @@ class AnalysisModel(MovableObject):
 
     def eigenAnalysis(self, numMode, generalized, findSmallest):
         pass
+
     def commitDomain(self):
-        pass
+        # check to see there is a Domain linked to the Model
+        if self.myDomain == 0:
+            print('WARNING: AnalysisModel::commitDomain. No Domain linked.\n')
+            return -1
+        # invoke the method
+        if self.myDomain.commit() < 0:
+            print('WARNING: AnalysisModel::commitDomain - Domain::commit() failed.\n')
+            return -2
+        return 0
+
     def revertDomainToLastCommit(self):
         pass
 
