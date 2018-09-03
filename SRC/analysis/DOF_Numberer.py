@@ -1,4 +1,4 @@
-from actor.MovableObject import MovableObject
+from SRC.actor.MovableObject import MovableObject
 
 # DOF_Numberer: responsible for
 # 1. assigning equation numbers to the dof in each DOF_Group object.
@@ -8,12 +8,12 @@ class DOF_Numberer(MovableObject):
     NUMBERER_TAG_DOF_Numberer = 1
     def __init__(self, aGraphNumberer):
         super().__init__(self.NUMBERER_TAG_DOF_Numberer)
-        self._theGraphNumberer = aGraphNumberer
-        self._theAnalysisModel = None
+        self.theGraphNumberer = aGraphNumberer
+        self.theAnalysisModel = None
 
 
     def setLinks(self, theModel):
-        self._theAnalysisModel = theModel
+        self.theAnalysisModel = theModel
     
     
     
@@ -21,21 +21,21 @@ class DOF_Numberer(MovableObject):
         
         # check we have a model and a numberer
         theDomain = None
-        if(self._theAnalysisModel!=None):
-            theDomain = self._theAnalysisModel.getDomain()
-        if((self._theAnalysisModel==None) or(theDomain==None)):
+        if(self.theAnalysisModel!=None):
+            theDomain = self.theAnalysisModel.getDomain()
+        if((self.theAnalysisModel==None) or(theDomain==None)):
             print('WAERNING DOF_Numberer::numberDOF - Pointers are not set.\n')
             return -1
-        if(self._theGraphNumberer==None):
+        if(self.theGraphNumberer==None):
             print('WARNING DOF_Numberer::numberDOF - subclasses must provide own implementation\n')
             return -2
         # check we cant do quick return
-        if(self._theAnalysisModel.getNumDOF_Groups()==None):
+        if(self.theAnalysisModel.getNumDOF_Groups()==None):
             return 0
     
     def getAnalysisModel(self):
-        return self._theAnalysisModel
+        return self.theAnalysisModel
     
     def getGraphNumberer(self):
-        return self._theGraphNumberer
+        return self.theGraphNumberer
     
