@@ -1,3 +1,4 @@
+
 from SRC.domain.domain.Domain import Domain
 from SRC.domain.Node import Node 
 from SRC.material.ElasticMaterial import ElasticMaterial
@@ -12,9 +13,9 @@ from SRC.analysis.integrator.LoadControl import LoadControl
 from SRC.analysis.handler.PenaltyConstraintHandler import PenaltyConstraintHandler
 from SRC.graph.RCM import RCM
 from SRC.analysis.DOF_Numberer import DOF_Numberer
-from SRC.system_of_eqn.LinearSOE.BandSPDLinLapackSolver import BandSPDLinLapackSolver
-from SRC.system_of_eqn.BandSPDLinSOE import BandSPDLinSOE
-from SRC.analysis.StaticAnalysis import StaticAnalysis
+from SRC.system_of_eqn.LinearSOE.bandSPD.BandSPDLinLapackSolver import BandSPDLinLapackSolver
+from SRC.system_of_eqn.LinearSOE.bandSPD.BandSPDLinSOE import BandSPDLinSOE
+from SRC.analysis.analysis.StaticAnalysis import StaticAnalysis
 
 theDomain = Domain()
 

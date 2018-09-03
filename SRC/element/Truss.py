@@ -16,25 +16,25 @@ class Truss(Element):
         self.theVector = None  # pointer to objects vector (a class wide Vector) ??
 
         self.L = 0.0       # length of truss based on undeformed configuration
-        self._A = A         # area of truss
-        self._rho = r       # rho: mass density per unit length
+        self.A = A         # area of truss
+        self.rho = r       # rho: mass density per unit length
 
-        self._doRayleighDamping = damp  # flag to include Rayleigh damping
-        self._cMass = cm                # consistent mass flag
+        self.doRayleighDamping = damp  # flag to include Rayleigh damping
+        self.cMass = cm                # consistent mass flag
 
-        self._cosX = [0, 0, 0]      # direction cosines
-        self._theNodes = [None, None]
-        self._initialDisp = None
+        self.cosX = [0, 0, 0]      # direction cosines
+        self.theNodes = [None, None]
+        self.initialDisp = None
     
     # public methods to obtain information about dof and connectivity
     def getNumExternalNodes(self):
         return 2
     def getExternalNodes(self):
-        return self._connectedExternalNodes
+        return self.connectedExternalNodes
     def getNode(self):
-        return self._theNodes
+        return self.theNodes
     def getNumDOF(self):
-        return self._numDOF
+        return self.numDOF
     def setDomain(self, theDomain):
         # to set a link to the enclosing Domain and to set the node pointers
         # also determines the number of dof associated
@@ -42,17 +42,17 @@ class Truss(Element):
         # determine the length and set the transformation matrix
 
         # check Domain is not null - invoked when object removed from the a domain
-        if (self._theDomain==None):
-            self._theNodes = [None, None]
-            self._L = 0
+        if (self.theDomain==None):
+            self.theNodes = [None, None]
+            self.L = 0
         
         # first set the node pointers
-        Nd1 = self._connectedExternalNodes[0]
+        Nd1 = self.connectedExternalNodes[0]
          
     
     # public methods to set the state of the element
     def revertToLastCommit(self):
-        return self._theMaterial.revertToLastCommit()
+        return self.theMaterial.revertToLastCommit()
     # public methods to obtain stiffness, mass, damping and residual information
 
     # public methods for element output

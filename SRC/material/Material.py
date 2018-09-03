@@ -1,5 +1,5 @@
-from tagged.TaggedObject import TaggedObject
-from actor.MovableObject import MovableObject
+from SRC.tagged.TaggedObject import TaggedObject
+from SRC.actor.MovableObject import MovableObject
 
 class Material(TaggedObject, MovableObject):
     

@@ -1,4 +1,4 @@
-from material.Material import Material
+from SRC.material.Material import Material
 
 class UniaxialMaterial(Material):
 
