@@ -24,7 +24,9 @@ class Domain(object):
     # methods to populate a domain (add components to a domain)
     def addNode(self, node):
         nodTag = node.getTag()
-        # 先要看看 theNodes 里面有没有已经存在 node，输入 node 的节点号 nodTag
+        other = self.theNodes.getComponent(nodTag)
+        if other != None:
+            
         if(self.theNodes.hasComponent(nodTag)):
             print('node with tag '+str(nodTag)+' already exist in domain./n' )
         else:

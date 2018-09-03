@@ -2,11 +2,11 @@ from SRC.domain.component.DomainComponent import DomainComponent
 
 class Node(DomainComponent):
     NOD_TAG_Node = 1
-    def __init__(self, tag, ndof, Crd1, Crd2):
+    def __init__(self, tag, ndof, *Crd):
         DomainComponent.__init__(self, tag, Node.NOD_TAG_Node)
         self.numberDOF = ndof          # number of dof at Node
         self.theDOF_Group = None    # pointer to associated DOF_Group
-        self.Crd = [Crd1, Crd2]        # original nodal coords, vector
+        self.Crd = Crd        # Crd是可变参数，接收到的是一个 tuple
 
         self.commitDisp = []
         self.commitVel = []
@@ -23,11 +23,6 @@ class Node(DomainComponent):
         self.disp = [] # double arrays holding the disp, vel and accel value
         self.vel = []
         self.accel = []
-
-        # self.dbTag1 = 0 # needed for database
-        # self.dbTag2 = 0
-        # self.dbTag3 = 0
-        # self.dbTag4 = 0
 
         self.R = None        # nodal participation matrix
         self.mass = None     # mass matrix

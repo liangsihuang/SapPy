@@ -29,7 +29,7 @@ class StaticAnalysis(Analysis):
                 return -2
             
             stamp = theDomain.hasDomainChanged()
-            if(stamp!=self.domainStamp): 
+            if(self.domainStamp!=stamp): 
                 self.domainStamp = stamp
                 result = self.domainChanged()
                 if result < 0:
