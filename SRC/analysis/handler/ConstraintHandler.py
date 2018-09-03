@@ -1,4 +1,4 @@
-from actor.MovableObject import MovableObject
+from SRC.actor.MovableObject import MovableObject
 
 # Responsible for creating the DOF_Group and FE_Element objects, and adding them to the AnalysisModel.
 # Also responsible for assigning an initial mapping of dof to equation numbers.

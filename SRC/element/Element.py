@@ -1,19 +1,19 @@
-from domain.component.DomainComponent import DomainComponent
+from SRC.domain.component.DomainComponent import DomainComponent
 
 class Element(DomainComponent):
 
     def __init__(self, tag, classTag):
         super().__init__(tag, classTag)
-        self._alphaM = 0.0
-        self._betaK = 0.0
-        self._betaK0 = 0.0
-        self._betaKc = 0.0
-        self._Kc = None         # pointer to hold last committed matrix if needed for rayleigh damping
-        self._previousK = None
-        self._numPreviousK = 0
+        self.alphaM = 0.0
+        self.betaK = 0.0
+        self.betaK0 = 0.0
+        self.betaKc = 0.0
+        self.Kc = None         # pointer to hold last committed matrix if needed for rayleigh damping
+        self.previousK = None
+        self.numPreviousK = 0
 
-        self._index = -1
-        self._nodeIndex = -1
+        self.index = -1
+        self.nodeIndex = -1
 
     
     # methods dealing with nodes and number of external dof

@@ -1,20 +1,20 @@
 from SRC.domain.domain.Domain import Domain
-from domain.Node import Node 
-from material.ElasticMaterial import ElasticMaterial
-from element.Truss import Truss
-from domain.SP_Constraint import SP_Constraint
-from domain.LinearSeries import LinearSeries
-from domain.LoadPattern import LoadPattern
-from domain.NodalLoad import NodalLoad
-from analysis.AnalysisModel import AnalysisModel
-from analysis.Linear import Linear
-from analysis.LoadControl import LoadControl
-from analysis.PenaltyConstraintHandler import PenaltyConstraintHandler
-from graph.RCM import RCM
-from analysis.DOF_Numberer import DOF_Numberer
-from system_of_eqn.BandSPDLinLapackSolver import BandSPDLinLapackSolver
-from system_of_eqn.BandSPDLinSOE import BandSPDLinSOE
-from analysis.StaticAnalysis import StaticAnalysis
+from SRC.domain.Node import Node 
+from SRC.material.ElasticMaterial import ElasticMaterial
+from SRC.element.Truss import Truss
+from SRC.domain.SP_Constraint import SP_Constraint
+from SRC.domain.timeSeries.LinearSeries import LinearSeries
+from SRC.domain.LoadPattern import LoadPattern
+from SRC.domain.NodalLoad import NodalLoad
+from SRC.analysis.model.AnalysisModel import AnalysisModel
+from SRC.analysis.algorithm.Linear import Linear
+from SRC.analysis.integrator.LoadControl import LoadControl
+from SRC.analysis.handler.PenaltyConstraintHandler import PenaltyConstraintHandler
+from SRC.graph.RCM import RCM
+from SRC.analysis.DOF_Numberer import DOF_Numberer
+from SRC.system_of_eqn.LinearSOE.BandSPDLinLapackSolver import BandSPDLinLapackSolver
+from SRC.system_of_eqn.BandSPDLinSOE import BandSPDLinSOE
+from SRC.analysis.StaticAnalysis import StaticAnalysis
 
 theDomain = Domain()
 
