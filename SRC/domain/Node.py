@@ -1,4 +1,5 @@
 from SRC.domain.component.DomainComponent import DomainComponent
+from SRC.matrix.Vector import Vector
 
 class Node(DomainComponent):
     NOD_TAG_Node = 1
@@ -6,8 +7,12 @@ class Node(DomainComponent):
         DomainComponent.__init__(self, tag, Node.NOD_TAG_Node)
         self.numberDOF = ndof          # number of dof at Node
         self.theDOF_Group = None    # pointer to associated DOF_Group
-        self.Crd = Crd        # Crd是可变参数，接收到的是一个 tuple
 
+        
+        self.Crd = Vector(len(Crd))        # Crd是可变参数，接收到的是一个 tuple
+        for i in len(Crd):
+            self.Crd[i] = Crd[i] 
+        
         self.commitDisp = []
         self.commitVel = []
         self.commitAccel = []
@@ -44,6 +49,7 @@ class Node(DomainComponent):
     # public methods for obtaining the nodal coordinates
     def getCrds(self):
         return self.Crd
+        
     def getDisplayCrds(self, results, fact):
         pass
     def setDisplayCrds(self, theCrds):

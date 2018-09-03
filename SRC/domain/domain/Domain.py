@@ -1,4 +1,5 @@
 from SRC.tagged.MapOfTaggedObjects import MapOfTaggedObjects
+from SRC.matrix.Vector import Vector
 
 class Domain(object):
     def __init__(self):
@@ -21,41 +22,88 @@ class Domain(object):
         self.nodeGraphBuiltFlag = False # 干啥的？
         self.eleGraphBuiltFlag = False
 
+        self.theBounds = Vector(6)
+        self.theBounds[0] = 0 # x min
+        self.theBounds[1] = 0 # y min
+        self.theBounds[2] = 0 # z min
+        self.theBounds[3] = 0 # x max
+        self.theBounds[4] = 0 # y max
+        self.theBounds[5] = 0 # z max
+        
+
     # methods to populate a domain (add components to a domain)
     def addNode(self, node):
         nodTag = node.getTag()
         other = self.theNodes.getComponent(nodTag)
         if other != None:
-            
-        if(self.theNodes.hasComponent(nodTag)):
             print('node with tag '+str(nodTag)+' already exist in domain./n' )
-        else:
-            self.theNodes.addComponent(node)
+            return False
+        
+        result = self.theNodes.addComponent(node)
+        if result == True:
             node.setDomain(self)
+            self.domainChange()
+            # see if the physical bounds are changed 
+            # note this assumes 0,0,0,0,0,0 as startup min,max values
+            crds = node.getCrds()
+            dim = crds.Size()
+            if dim >= 1:
+                x = crds[0]
+                if x < self.theBounds[0]:
+                    self.theBounds[0] = x
+                if x > self.theBounds[3]:
+                    self.theBounds[3] = x
+            if dim >= 2:
+                y = crds[1]
+                if y < self.theBounds[1]:
+                    self.theBounds[1] = y
+                if y > self.theBounds[4]:
+                    self.theBounds[4] = y
+            if dim >= 3:
+                z = crds[2]
+                if z < self.theBounds[2]:
+                    self.theBounds[2] = z
+                if z > self.theBounds[5]:
+                    self.theBounds[5] = z
+        else:
+            print('Domain::addNode - node with tag '+str(nodTag)+' could not be added to container.\n')
 
-        # 还要： see if the physical bounds are changed
-    
+        return result
+
     def addElement(self, element):
         eleTag = element.getTag()
         # check all the element nodes exists in the domain
         nodes = element.getExternalNodes()
-        for i in ragne(0,nodes.len()):
-            if(self.theNodes.hasComponent(nodes[i]):
-                pass
-            else:
+        numDOF = 0
+        for i in range(0,nodes.Size()):
+            nodeTag = nodes[i]
+            node = self.getNode(nodeTag)
+            if node == None:
                 print('WARNING Domain::addElement - In element '+str(eleTag))
                 print('\n no Node '+str(nodes[i])+' exists in the domain.\n')
+                return False
+            numDOF += node.getNumberDOF()
         # check if an Element with a similar tag already exists in the Domain
-        if(self.theElements.hasComponent(eleTag)):
-            print('element with tag '+str(eleTag)+' already exist in domain./n')
-        else:
-            self.theElements.addComponent(element)
+        other = self.theElements.getComponent(eleTag)
+        if other != None:
+            print('Domain::addElement - element with tag '+str(eleTag)+' already exist in domain./n')
+            return False
+        # add
+        result = self.theElements.addComponent(element)
+        if result == True:
             element.setDomain(self)
-        
-        # 还要：
-        # finally check the ele has correct number of dof
-        # mark the Domain as having been changed
-    
+            element.update()
+            # finally check the ele has correct number of dof
+            if numDOF != element.getNumDOF():
+                print('Domain::addElement - element '+str(eleTag)+' - #DOF does not match with number at nodes.\n')
+                self.theElements.removeComponent(eleTag)
+                return False
+            # mark the Domain as having been changed
+            self.domainChange()
+        else:
+            print('Domain::addElement - element '+str(eleTag)+' could not be added to container.\n')
+        return result
+
     def addSP_Constraint(self, spConstraint):
         nodeTag = spConstraint.getNodeTag()
         dof = spConstraint.getDOF_Number()

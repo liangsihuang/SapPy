@@ -3,20 +3,34 @@ from tagged.TaggedObject import TaggedObject
 class MapOfTaggedObjects(TaggedObject):
 
     def __init__(self):
-        self._theMap = {}
-    
-    def hasComponent(self, tag):
-        return self._theMap.__contains__(tag)
+        self.theMap = {}
 
     def getComponent(self, tag):
-        return self._theMap.get(tag, 0)
+        return self.theMap.get(tag)
 
     def addComponent(self, newComponent):
         tag = newComponent.getTag()
         # check if the ele already in map, if not we add
-        if(self.hasComponent(tag)==False):
-            self._theMap[tag] = newComponent
-        self._theMap[tag] = newComponent
+        if self.theMap.__contains__(tag) == False:
+            self.theMap[tag] = newComponent
+            # check if sucessfully added
+            if self.theMap.__contains__(tag) == False:
+                print('MapOfTaggedObjects::addComponent - dict(python) failed to add object with tag :'+str(newComponent.getTag())+'.\n')
+                return False
+            return True
+        else:
+            print('MapOfTaggedObjects::addComponent - not adding as one with similar tag exists, tag:'+str(newComponent.getTag())+'.\n')
+            return False
+    
+    
+
+         
+        
+            
+
+        
+            
+
 
 
     
