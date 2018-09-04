@@ -6,7 +6,7 @@ class MapOfTaggedObjects(TaggedObject):
         self.theMap = {}
 
     def getComponent(self, tag):
-        return self.theMap.get(tag)
+        return self.theMap.get(tag, d=None)
 
     def addComponent(self, newComponent):
         tag = newComponent.getTag()
@@ -21,6 +21,16 @@ class MapOfTaggedObjects(TaggedObject):
         else:
             print('MapOfTaggedObjects::addComponent - not adding as one with similar tag exists, tag:'+str(newComponent.getTag())+'.\n')
             return False
+    
+    def removeComponent(self, tag):
+        # return 0 if component does not exist, otherwise remove it
+        theEle = self.theMap.get(tag, d=None)
+        if theEle == None:
+            return 0
+        else:
+            removed = self.theMap.pop(tag)
+            return removed
+        
     
     
 

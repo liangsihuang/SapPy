@@ -65,6 +65,11 @@ class Node(DomainComponent):
         if self.trialDisp == None:
             self.createDisp()
         return self.trialDisp
+    
+    def getTrialVel(self):
+        if self.trialVel == None:
+            self.createVel()
+        return self.trialVel
 
     # public methods for updating the trial response quantities
     def incrTrialDisp(self, incrDispl):
@@ -127,16 +132,19 @@ class Node(DomainComponent):
     def createDisp(self):
         # trial , committed, incr = (committed-trial)
         self.disp = np.zeros(4*self.numberDOF)
-
+        # 按照储存顺序
         self.trialDisp = Vector(self.numberDOF, self.disp[0:self.numberDOF])
         self.commitDisp = Vector(self.numberDOF, self.disp[self.numberDOF:2*self.numberDOF])
         self.incrDisp = Vector(self.numberDOF, self.disp[2*self.numberDOF:3*self.numberDOF])
         self.incrDeltaDisp = Vector(self.numberDOF, self.disp[3*self.numberDOF:-1])
-
         return 0
 
     def createVel(self):
-        pass
+        self.vel = np.zeros(2*self.numberDOF)
+        self.trialVel = Vector(self.numberDOF, self.vel[0:self.numberDOF])
+        self.commitVel = Vector(self.numberDOF, self.vel[self.numberDOF:2*self.numberDOF])
+        return 0
+    
     def createAccel(self):
         pass
 

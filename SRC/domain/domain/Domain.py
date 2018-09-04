@@ -219,8 +219,10 @@ class Domain(object):
     #     pass
     def getElement(self, tag):
         pass
+        
     def getNode(self, tag):
-        return self.theNodes.get(tag, defalut=0)
+        return self.theNodes.get(tag, d=None)
+
     def getSP_Constraint(self, tag):
         pass
     def getPressure_Constraint(self, tag):

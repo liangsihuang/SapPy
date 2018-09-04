@@ -23,8 +23,8 @@ class Truss(Element):
         self.cMass = cm                # consistent mass flag
 
         self.cosX = [0, 0, 0]      # direction cosines
-        self.theNodes = [None, None] # 指针数组对应 list
-        self.initialDisp = None
+        self.theNodes = [None, None] # int指针数组 对应 list , 和 connectedExternalNodes 有什么区别？一个存储节点号，一个存储节点本身
+        self.initialDisp = None     # list
     
     # public methods to obtain information about dof and connectivity
     def getNumExternalNodes(self):
@@ -45,10 +45,19 @@ class Truss(Element):
         if (self.theDomain==None):
             self.theNodes = [None, None]
             self.L = 0
-        
+            return
         # first set the node pointers
         Nd1 = self.connectedExternalNodes[0]
-         
+        Nd2 = self.connectedExternalNodes[1]
+        self.theNodes[0] = theDomain.getNode(Nd1)
+        self.theNodes[1] = theDomain.getNode(Nd2)
+        # if can't find both - send a warning message
+        if self.theNodes[0]==None or self.theNodes[1]==None:
+            if self.theNodes[0]==None:
+                print('Truss::setDomain() - truss '+ str(self.getTag())+' node '+str(Nd1)+' does not exist in the model.\n')
+            else:
+                print('Truss::setDomain() - truss '+ str(self.getTag())+' node '+str(Nd2)+' does not exist in the model.\n')
+                
     
     # public methods to set the state of the element
     def revertToLastCommit(self):
@@ -57,7 +66,7 @@ class Truss(Element):
     def update(self):
         # determine the current strain given trial displacements at nodes
         strain = self.computeCurrentStrain()
-        rate = self.computerCurrentStrainRate()
+        rate = self.computeCurrentStrainRate()
         return self.theMaterial.setTrialStrain(strain, rate)
 
     # public methods to obtain stiffness, mass, damping and residual information
@@ -71,8 +80,24 @@ class Truss(Element):
         disp1 = self.theNodes[0].getTrialDisp() # Vector
         disp2 = self.theNodes[1].getTrialDisp()
         dLength = 0.0
-        
+        if self.initialDisp == None:
+            for i in range(0, self.dimension):
+                dLength += (disp2[i] - disp1[i]) * self.cosX[i]
+        else:
+            for i in range(0, self.dimension):
+                dLength += (disp2[i] - disp1[i] - self.initialDisp[i]) * self.cosX[i]
+
+        # this method should never be called with L == 0
+        return dLength/self.L
 
     
     def computeCurrentStrainRate(self):
-        pass
+        # Note: method will not be called if L == 0
+        # determine the strain
+        vel1 = self.theNodes[0].getTrialVel()
+        vel2 = self.theNodes[1].getTrialVel()
+        dLength = 0.0
+        for i in range(0, self.dimension):
+            dLength += (vel2[i] - vel1[i]) * self.cosX[i]
+        # this method should never be called with L == 0
+        return dLength/self.L
