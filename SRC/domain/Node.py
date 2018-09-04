@@ -1,5 +1,6 @@
 from SRC.domain.component.DomainComponent import DomainComponent
 from SRC.matrix.Vector import Vector
+import numpy as np
 
 class Node(DomainComponent):
     NOD_TAG_Node = 1
@@ -13,30 +14,32 @@ class Node(DomainComponent):
         for i in len(Crd):
             self.Crd[i] = Crd[i] 
         
-        self.commitDisp = []
-        self.commitVel = []
-        self.commitAccel = []
+        self.commitDisp = Vector(0)
+        self.commitVel = Vector(0)
+        self.commitAccel = Vector(0)
 
-        self.trialDisp = []
-        self.trialVel = []  
-        self.trialAccel = []    
+        self.trialDisp = Vector(0)
+        self.trialVel = Vector(0)  
+        self.trialAccel = Vector(0)
 
-        self.unbalLoad = []        # unbalanced load
-        self.incrDisp = []
-        self.incrDeltaDisp = []
+        self.unbalLoad = Vector(0)       # unbalanced load
+        self.incrDisp = Vector(0)
+        self.incrDeltaDisp = Vector(0)
 
-        self.disp = [] # double arrays holding the disp, vel and accel value
-        self.vel = []
-        self.accel = []
+        # double arrays holding the disp, vel and accel value
+        # 对应 np.narray
+        self.disp = None 
+        self.vel = None
+        self.accel = None
 
         self.R = None        # nodal participation matrix
         self.mass = None     # mass matrix
-        self.unbalLoadWithInertia = []
+        self.unbalLoadWithInertia = Vector(0)
         self.alphaM = 0        # rayleigh damping factor
         self.theEigenvectors = None 
 
-        self.reaction = []
-        self.displayLocation = []
+        self.reaction = Vector(0)
+        self.displayLocation = Vector(0)
 
     # public methods dealing with the DOF at the node
     def getNumberDOF(self):
@@ -57,6 +60,12 @@ class Node(DomainComponent):
     # public methods for obtaining committed and trial response quantities of the node
     def getDisp(self):
         pass
+    
+    def getTrialDisp(self):
+        if self.trialDisp == None:
+            self.createDisp()
+        return self.trialDisp
+
     # public methods for updating the trial response quantities
     def incrTrialDisp(self, incrDispl):
         # incrDispl 是 Vector
@@ -116,7 +125,16 @@ class Node(DomainComponent):
     # private methods used to create the Vector objects 
     # for the committed and trial response quantities.
     def createDisp(self):
-        pass
+        # trial , committed, incr = (committed-trial)
+        self.disp = np.zeros(4*self.numberDOF)
+
+        self.trialDisp = Vector(self.numberDOF, self.disp[0:self.numberDOF])
+        self.commitDisp = Vector(self.numberDOF, self.disp[self.numberDOF:2*self.numberDOF])
+        self.incrDisp = Vector(self.numberDOF, self.disp[2*self.numberDOF:3*self.numberDOF])
+        self.incrDeltaDisp = Vector(self.numberDOF, self.disp[3*self.numberDOF:-1])
+
+        return 0
+
     def createVel(self):
         pass
     def createAccel(self):

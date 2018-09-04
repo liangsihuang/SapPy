@@ -23,7 +23,7 @@ class Truss(Element):
         self.cMass = cm                # consistent mass flag
 
         self.cosX = [0, 0, 0]      # direction cosines
-        self.theNodes = [None, None]
+        self.theNodes = [None, None] # 指针数组对应 list
         self.initialDisp = None
     
     # public methods to obtain information about dof and connectivity
@@ -53,7 +53,26 @@ class Truss(Element):
     # public methods to set the state of the element
     def revertToLastCommit(self):
         return self.theMaterial.revertToLastCommit()
+    
+    def update(self):
+        # determine the current strain given trial displacements at nodes
+        strain = self.computeCurrentStrain()
+        rate = self.computerCurrentStrainRate()
+        return self.theMaterial.setTrialStrain(strain, rate)
+
     # public methods to obtain stiffness, mass, damping and residual information
 
     # public methods for element output
 
+    # private
+    def computeCurrentStrain(self):
+        # Note: method will not be called if L == 0
+        # determine the strain
+        disp1 = self.theNodes[0].getTrialDisp() # Vector
+        disp2 = self.theNodes[1].getTrialDisp()
+        dLength = 0.0
+        
+
+    
+    def computeCurrentStrainRate(self):
+        pass

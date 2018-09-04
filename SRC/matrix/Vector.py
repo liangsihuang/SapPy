@@ -1,8 +1,9 @@
 import numpy as np
+
 class Vector(object):
     def __init__(self, size = 0, data = None):
-        self.sz = size
-        self.data = data
+        self.sz = size   # int
+        self.data = data # np.narray
         self.fromFree = 0
         if (size > 0) and (data == None):
             self.data = np.zeros(size)
