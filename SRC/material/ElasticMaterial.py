@@ -13,14 +13,62 @@ class ElasticMaterial(UniaxialMaterial):
         self.committedStrain = 0.0
         self.committedStrainRate = 0.0
 
-    def revertToLastCommit(self):
-        self.trialStrain = self.committedStrain
-        self.trialStrainRate = self.committedStrainRate
-        return 0
+    
     
     def setTrialStrain(self, strain, strainRate):
         self.trialStrain = strain
         self.trialStrainRate = strainRate
         return 0
     
+    def setTrial(self, strain, stress, tangent, strainRate=0.0):
+        pass
+        
+    def getStrain(self):
+        return self.trialStrain
+
+    def getStrainRate(self):
+        return self.trialStrainRate
+
+    def getStress(self):
+        if self.trialStrain >= 0.0:
+            return self.Epos*self.trialStrain + self.eta*self.trialStrainRate
+        else:
+            return self.Eneg*self.trialStrain + self.eta*self.trialStrainRate
+
+    def getTangent(self):
+        if self.trialStrain > 0.0:
+            return self.Epos
+        elif self.trialStrain < 0.0:
+            return self.Eneg
+        else:
+            if self.Epos > self.Eneg:
+                return self.Epos
+            else:
+                return self.Eneg
+
+    def getDampTangent(self):
+        return self.eta
+
+    def getInitialTangent(self):
+        if self.Epos > self.Eneg:
+            return self.Epos
+        else:
+            return self.Eneg
+    
+    def commitState(self):
+        self.committedStrain = self.trialStrain
+        self.committedStrainRate = self.trialStrainRate
+        return 0
+
+    def revertToLastCommit(self):
+        self.trialStrain = self.committedStrain
+        self.trialStrainRate = self.committedStrainRate
+        return 0
+    def revertToStart(self):
+        pass
+
+    def getCopy(self):
+        pass
+    
+
     

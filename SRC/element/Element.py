@@ -17,22 +17,16 @@ class Element(DomainComponent):
 
     
     # methods dealing with nodes and number of external dof
-    def getNumExternalNodes(self):
-        pass # 纯虚函数
-    def getExternalNodes(self):
-        pass # 纯虚函数
-    def getNode(self):
-        pass # 纯虚函数
-    def getNumDOF(self):
-        pass # 纯虚函数
+
     def getCharacteristicLength(self):
         pass
         
     # methods dealing with commited state and update
-    def commitState(self):
-        pass
-    def revertToLastCommit(self):
-        pass # 纯虚函数
+    # def commitState(self):
+    #     if self.Kc != None:
+    #         Kc = self.getTangentStiff() # Python 没有虚函数，只能把这段写在每个子类中
+    #     return 0
+
     def revertToStart(self):
         pass
     def update(self):
@@ -41,10 +35,6 @@ class Element(DomainComponent):
         return False # 有鬼用？（注意：虚函数）
 
     # methods to return the current linearized stiffness, damping and mass matrices
-    def getTangentStiff(self):
-        pass # 纯虚函数
-    def getInitialStiff(self):
-        pass # 纯虚函数
     def getDamp(self):
         pass
     def getMass(self):
@@ -64,8 +54,6 @@ class Element(DomainComponent):
         pass
 
     # methods for obtaining resisting force (force includes elemental loads)
-    def getResistingForce(self):
-        pass # 纯虚函数
     def getResistingForceIncInertia(self):
         pass
 
