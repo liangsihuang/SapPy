@@ -1,4 +1,4 @@
-from SRC.tagged.MapOfTaggedObjects import MapOfTaggedObjects
+from SRC.tagged.storage.MapOfTaggedObjects import MapOfTaggedObjects
 from SRC.matrix.Vector import Vector
 
 class Domain(object):
@@ -169,8 +169,6 @@ class Domain(object):
     def addElementalLoad(self):
         pass
 
-    def addSP_Constraint(self):
-        pass
     # methods to remove the components
     def clearAll(self):
         pass
