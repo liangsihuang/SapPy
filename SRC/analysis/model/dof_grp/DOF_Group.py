@@ -34,27 +34,50 @@ class DOF_Group(TaggedObject):
         DOF_Group.numDOFs += 1
         
         
-    def setID(self, dof, value):
-        pass
+    def setID(self, index, value): # 有重载，复制函数
+        if index >= 0 and index <= self.numDOF:
+            self.myID[index] = value
+        else:
+            print('WARNING DOF_Group::setID - invalid location '+str(index)+' in ID of size '+str(self.numDOF)+'.\n')
+
     def getID(self):
         return self.myID
+
     def doneID(self):
-        pass
+        return 0 # 有鬼用
     
     def getNodeTag(self):
-        pass  
+        if self.myNode != None:
+            return self.myNode.getTag()
+        else:
+            return -1
+
     def getNumDOF(self):
-        pass
+        return self.numDOF
+
     def getNumFreeDOF(self):
-        pass
+        numFreeDOF = self.numDOF
+        for i in range(0, self.numDOF):
+            if self.myID[i] == -1 or self.myID[i] == -4:
+                numFreeDOF -= 1
+        return numFreeDOF
+
     def getNumConstrainedDOF(self):
-        pass
+        numConstr = 0
+        for i in range(0, self.numDOF):
+            if self.myID[i] < 0:
+                numConstr += 1
+        return numConstr
     
     # methods to form the tangent
-    def getTangent(self, theIntegrator):
-        pass
+    def getTangent(self, theIntegrator): # 不call还写出来干嘛？
+        if theIntegrator != None:
+            theIntegrator.formNodTangent(self) # StaticIntegrator::formNodTangent() - this method should never have been called!
+        return self.tangent # is Matrix
+
     def zeroTangent(self):
-        pass
+        self.tangent.Zero()
+
     def addMtoTang(self, fact = 1.0):
         pass
     def addCtoTang(self, fact = 1.0):
@@ -62,11 +85,20 @@ class DOF_Group(TaggedObject):
     
     # methods to form the unbalance
     def getUnbalance(self, theIntegrator):
-        pass
+        if theIntegrator != None:
+            theIntegrator.formNodUnbalance(self)
+        return self.unbalance # is Vector
+
     def zeroUnbalance(self):
-        pass
+        self.unbalance.Zero()
+
     def addPtoUnbalance(self, fact = 1.0):
-        pass
+        if self.myNode != None:
+            if self.unbalance.addVector(1.0, self.myNode.getUnbalancedLoad(), fact) < 0 :
+                print('DOF_Group::addPIncInertiaToUnbalance() - invoking addVector() on the unbalance failed.\n')
+        else:
+            print('DOF_Group::addPtoUnbalance() - no Node associated. Subclass should provide the method.\n')
+
     def addPIncInertiaToUnbalance(self, fact = 1.0):
         pass
     def addM_Force(self, Udotdot, fact = 1.0):

@@ -56,5 +56,10 @@ class LoadControl(StaticIntegrator):
         self.numIncrLastStep += 1
         return 0
     
+    def setDeltaLambda(self, newDeltaLambda):
+        pass
+    
+    
+    
     
 

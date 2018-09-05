@@ -21,7 +21,15 @@ class ElasticMaterial(UniaxialMaterial):
         return 0
     
     def setTrial(self, strain, stress, tangent, strainRate=0.0):
-        pass
+        self.trialStrain = strain
+        self.trialStrainRate = strainRate
+        if self.trialStrain >= 0.0:
+            stress = self.Epos * self.trialStrain + self.eta * self.trialStrainRate
+            tangent = self.Epos
+        else:
+            stress = self.Eneg * self.trialStrain + self.eta * self.trialStrainRate
+            tangent = self.Eneg
+        return 0
         
     def getStrain(self):
         return self.trialStrain
@@ -64,8 +72,11 @@ class ElasticMaterial(UniaxialMaterial):
         self.trialStrain = self.committedStrain
         self.trialStrainRate = self.committedStrainRate
         return 0
+
     def revertToStart(self):
-        pass
+        self.trialStrain = 0.0
+        self.trialStrainRate = 0.0
+        return 0
 
     def getCopy(self):
         pass
