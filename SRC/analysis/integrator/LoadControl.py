@@ -41,7 +41,7 @@ class LoadControl(StaticIntegrator):
     def update(self, deltaU):
         # deltaU 是 Vector
         myModel = self.getAnalysisModel()
-        theSOE = self.getLinearSOE()
+        theSOE = self.getLinearSOE() 
         if myModel==None or theSOE==None:
             print('WARNING LoadControl::update() - No AnalysisModel or LinearSOE has been set.\n')
             return -1
@@ -56,8 +56,11 @@ class LoadControl(StaticIntegrator):
         self.numIncrLastStep += 1
         return 0
     
-    def setDeltaLambda(self, newDeltaLambda):
-        pass
+    def setDeltaLambda(self, newValue):
+        # we set the #incr at last step = #incr so get newValue incr
+        self.numIncrLastStep = self.specNumIncrStep
+        self.deltaLambda = newValue
+        return 0
     
     
     

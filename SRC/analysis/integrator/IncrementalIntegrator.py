@@ -61,28 +61,24 @@ class IncrementalIntegrator(Integrator):
             return -2
         
         return 0
-    # pure virtual methods to define the FE_Ele and DOF_Group contributions
-    # 在父类中定义了
 
     # methods to update the domain
-    def newStep(self, deltaT):
-        pass
-
-    def update(self, deltaU):
-        pass # 纯虚
-        
     def commit(self):
         if self.theAnalysisModel == None:
             print('WARNING IncrementalIntegrator::commit() - no AnalysisModel object associated with this object.\n')
             return -1
         return self.theAnalysisModel.commitDomain()
-        
 
-    def revertToLastStep(self):
-        pass
-    def initialize(self):
-        pass
-    
+    # protected:
+    def getLinearSOE(self):
+        return self.theSOE
+
+    def getAnalysisModel(self):
+        return self.theAnalysisModel
+
+    def getConvergenceTest(self):
+        return self.theTest
+
     def formElementResidual(self):
         # loop through the FE_Elements and add the residual
         theEles2 = self.theAnalysisModel.getFEs()
@@ -93,6 +89,7 @@ class IncrementalIntegrator(Integrator):
                 return -2
         return 0
     
+
     def formNodalUnbalance(self):
         # loop through the DOF_Groups and add the unbalance
         theDOFs = self.theAnalysisModel.getDOFs()

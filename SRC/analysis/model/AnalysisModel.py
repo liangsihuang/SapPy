@@ -1,9 +1,14 @@
 from SRC.actor.MovableObject import MovableObject
 from SRC.tagged.storage.ArrayOfTaggedObjects import ArrayOfTaggedObjects
+from SRC.tagged.storage.MapOfTaggedObjects import MapOfTaggedObjects
+from SRC.graph.Graph import Graph
+from SRC.graph.Vertex import Vertex
 
 # AnalysisModel: hold and provide access to the FE_Element and DOF_Group objects
 class AnalysisModel(MovableObject):
     AnaMODEL_TAGS_AnalysisModel = 1
+    START_EQN_NUM = 0
+    START_VERTEX_NUM = 0
     def __init__(self):
         MovableObject.__init__(self, self.AnaMODEL_TAGS_AnalysisModel)
 
@@ -61,35 +66,63 @@ class AnalysisModel(MovableObject):
             return False
 
     def clearAll(self):
-        # if the graphs have been constructed, delete them
-        if(self.myDOFGraph!=None):
-            self.myDOFGraph = None
+        self.theFEs.clearAll()
+        self.theDOFs.clearAll()
 
-        if(self.myGroupGraph!=None):
-            self.myGroupGraph = None
+        self.myDOFGraph = None
+        self.myGroupGraph = None
+
+        self.numFE_Ele = 0
+        self.numDOF_Grp = 0
+        self.numeqn = 0
     
     def clearDOFGraph(self):
-        pass
+        self.myDOFGraph = None
+
     def clearDOFGroupGraph(self):
-        pass
+        self.myGroupGraph = None
+
     # methods to access the FE_Elements and DOF_Groups and their numbers
     def getNumDOF_Groups(self):
         return self.numDOF_Grp
-    def getDOF_GroupPtr(self, tag):
-        pass
+
+    def getDOF_Group(self, tag):
+        return self.theDOFs.getComponent(tag)
 
     def getFEs(self):
-        pass
+        return self.theFEs
         
     def getDOFs(self):
-        pass
+        return self.theDOFs
     # methods to access the connectivity for SysOfEqn to size itself
     def setNumEqn(self, theNumEqn):
-        pass
+        self.numEqn = theNumEqn
+
     def getNumEqn(self):
-        pass
+        self.numEqn
+
     def getDOFGraph(self):
-        pass
+        if self.myDOFGraph == None:
+            numVertex = self.getNumDOF_Groups()
+            graphStorage = MapOfTaggedObjects()
+            self.myDOFGraph = Graph(graphStorage)
+
+            # create a vertex for each dof
+            theDOFs = self.getDoFs()
+            for dof in theDOFs:
+                id1= dof.getID()
+                size = id1.Size()
+                for i in range(0, size):
+                    dofTag = id1[i]
+                    if dofTag >= AnalysisModel.START_EQN_NUM:
+                        vertex = self.myDOFGraph.getVertex(dofTag)
+                        if vertex == None:
+                            vertex = Vertex(dofTag, dofTag)
+                            if self.myDOFGraph.addVertex(vertex, False) == False:
+                                print('WARNING AnalysisModel::getDOFGraph - error adding vertex.\n')
+                                return self.myDOFGraph
+
+
     def getDOFGroupGraph(self):
         pass
     
@@ -182,7 +215,7 @@ class AnalysisModel(MovableObject):
     def setRayleighDampingFactors(self, alphaM, betaK, betaKi, betaKc):
         pass
     def getDomain(self):
-        return self._myDomain
+        return self.myDomain
     
     
     
