@@ -2,7 +2,7 @@ from SRC.tagged.TaggedObject import TaggedObject
 from SRC.matrix.ID import ID
 
 class Vertex(TaggedObject):
-    def __init__(self, tag, ref, weight, color):
+    def __init__(self, tag, ref, weight=0, color=0):
         super().__init__(tag)
         self.myRef = ref
         self.myWeight = weight

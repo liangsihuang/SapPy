@@ -52,6 +52,8 @@ class ArrayOfTaggedObjects(object):
         self.theComponents.append(newComponent)
         return True
     
+    def getComponents(self):
+        return self.theComponents
 
 
 

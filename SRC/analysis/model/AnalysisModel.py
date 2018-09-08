@@ -104,11 +104,11 @@ class AnalysisModel(MovableObject):
     def getDOFGraph(self):
         if self.myDOFGraph == None:
             numVertex = self.getNumDOF_Groups()
-            graphStorage = MapOfTaggedObjects()
+            graphStorage = MapOfTaggedObjects() 
             self.myDOFGraph = Graph(graphStorage)
 
             # create a vertex for each dof
-            theDOFs = self.getDoFs()
+            theDOFs = self.getDOFs().getComponents()
             for dof in theDOFs:
                 id1= dof.getID()
                 size = id1.Size()
@@ -116,37 +116,101 @@ class AnalysisModel(MovableObject):
                     dofTag = id1[i]
                     if dofTag >= AnalysisModel.START_EQN_NUM:
                         vertex = self.myDOFGraph.getVertex(dofTag)
-                        if vertex == None:
-                            vertex = Vertex(dofTag, dofTag)
+                        if vertex == None: 
+                            vertex = Vertex(dofTag, dofTag) 
                             if self.myDOFGraph.addVertex(vertex, False) == False:
                                 print('WARNING AnalysisModel::getDOFGraph - error adding vertex.\n')
                                 return self.myDOFGraph
-
-
+            # now add the edges, by looping over the FE_elements, getting their IDs and adding edges between DOFs for equation numbers >= START_EQN_NUM
+            theFEs = self.getFEs().getComponents()
+            cnt = 0
+            for ele in theFEs:
+                id1 = ele.getID()
+                cnt += 1
+                size = id1.Size()
+                for i in range(0, size):
+                    eqn1 = id1[i]
+                    # if eqnNum of DOF is a valid eqn number add an edge to all other DOFs with valid eqn numbers.
+                    if eqn1 >= AnalysisModel.START_EQN_NUM:
+                        for j in range(i+1, size):
+                            eqn2 = id1[j]
+                            if eqn2 >= AnalysisModel.START_EQN_NUM:
+                                self.myDOFGraph.addEdge(eqn1 - AnalysisModel.START_EQN_NUM + AnalysisModel.START_VERTEX_NUM, 
+                                eqn2 - AnalysisModel.START_EQN_NUM + AnalysisModel.START_VERTEX_NUM)
+        return self.myDOFGraph
+ 
     def getDOFGroupGraph(self):
-        pass
+        if self.myGroupGraph == None:
+            numVertex = self.getNumDOF_Groups()
+            if numVertex == 0:
+                print('WARNING AnalysisMode::getGroupGraph - 0 vertices, has the Domain been populated?\n')
+                # exit(self, -1)
+            graphStorage = MapOfTaggedObjects()
+            self.myGroupGraph = Graph(graphStorage)
+            # now create the vertices with a reference equal to the DOF_Group number.
+            # and a tag which ranges from 0 through numVertex-1
+            theDOFs = self.getDOFs().getComponents()
+            count = AnalysisModel.START_VERTEX_NUM
+            for dof in theDOFs:
+                DOF_GroupTag = dof.getTag()
+                DOF_GroupNodeTag = dof.getNodeTag()
+                numDOF = dof.getNumFreeDOF()
+                vertex = Vertex(DOF_GroupTag, DOF_GroupNodeTag, 0, numDOF)
+                self.myGroupGraph.addVertex(vertex)
+            # now add the edges, by looping over the Elements, getting their
+            # IDs and adding edges between DOFs for equation numbers >= START_EQN_NUM
+            theFEs = self.getFEs.getComponents()
+            for ele in theFEs:
+                id1 = ele.getDOFtags()
+                size = id1.Size()
+                for i in range(0, size):
+                    dof1 = id1[i]
+                    for j in range(0, size):
+                        if i != j:
+                            dof2 = id1[j]
+                            self.myGroupGraph.addEdge(dof1, dof2)
+        return self.myGroupGraph
     
     # methods to update the response quantities at the DOF_Groups,
     # which in turn set the new nodal trial response quantities
     def setResponse(self, disp, vel, accel):
-        pass
+        # all is Vector
+        theDOFGrps = self.getDOFs().getComponents()
+        for dof in theDOFGrps:
+            dof.setNodeDisp(disp)
+            dof.setNodeVel(vel)
+            dof.setNodeAccel(accel)
+
     def setDisp(self, disp):
-        pass
+        theDOFGrps = self.getDOFs().getComponents()
+        for dof in theDOFGrps:
+            dof.setNodeDisp(disp)
+
     def setVel(self, vel):
-        pass
+        theDOFGrps = self.getDOFs().getComponents()
+        for dof in theDOFGrps:
+            dof.setNodeVel(vel)
+
     def setAccel(self, accel):
-        pass
+        theDOFGrps = self.getDOFs().getComponents()
+        for dof in theDOFGrps:
+            dof.setNodeAccel(accel)
 
     def incrDisp(self, disp):
         # disp 是 Vector
-        theDOFGrps = self.getDOFs()
+        theDOFGrps = self.getDOFs().getComponents()
         for dof in theDOFGrps:
             dof.incrNodeDisp(disp)
 
     def incrVel(self, vel):
-        pass
+        theDOFGrps = self.getDOFs().getComponents()
+        for dof in theDOFGrps:
+            dof.incrNodeVel(vel)
+
     def incrAccel(self, accel):
-        pass
+        theDOFGrps = self.getDOFs().getComponents()
+        for dof in theDOFGrps:
+            dof.incrNodeAccel(accel)
     
     # methods added to store the eigenvalues and vectors in the domain
     def setNumEigenvectors(self, numEigenvectors):
@@ -164,7 +228,8 @@ class AnalysisModel(MovableObject):
     
     # methods which trigger operations in the Domain
     def setLinks(self, theDomain, theHandler):
-        pass
+        self.myDomain = theDomain
+        self.myHandler = theHandler
 
     def applyLoadDomain(self, pseudoTime):
         # check to see there is a Domain linked to the Model
@@ -175,10 +240,20 @@ class AnalysisModel(MovableObject):
         self.myDomain.applyLoad(pseudoTime)
         self.myHandler.applyLoad()
 
-    def updateDomain(self):
-        pass
+    def updateDomain(self): # 有重载
+        # check to see there is a Domain linked to the Model
+        if self.myDomain == None:
+            print('WARNING: AnalysisModel::updateDomain. No Domain linked.\n')
+            return -1
+        
+        res = self.myDomain.update()
+        if res == 0:
+            return self.myHandler.update()
+        return res
+
     # def updateDomain(self, newTime, dT):
     #     pass
+
     def analysisStep(self, dT=0.0):
         # check to see there is a Domain linked to the Model
         if(self.myDomain==None):
@@ -201,7 +276,13 @@ class AnalysisModel(MovableObject):
         return 0
 
     def revertDomainToLastCommit(self):
-        pass
+        if self.myDomain == None:
+            print('WARNING: AnalysisModel::revertDomainToLastCommit. No Domain linked.\n')
+            return -1
+        if self.myDomain.revertToLastCommit() < 0:
+            print('WARNING: AnalysisModel::revertDomainToLastCommit. Domain::revertToLastCommit() failed.\n')
+            return -2
+        return 0
 
     def getCurrentDomainTime(self):
         # check to see there is a Domain linked to the Model
@@ -211,9 +292,14 @@ class AnalysisModel(MovableObject):
         return self.myDomain.getCurrentTime()
 
     def setCurrentDomainTime(self, newTime):
-        pass
+        if self.myDomain == None:
+            print('WARNING: AnalysisModel::getCurrentDomainTime. No Domain linked.\n')
+            return -1
+        return self.myDomain.getCurrentTime()
+
     def setRayleighDampingFactors(self, alphaM, betaK, betaKi, betaKc):
         pass
+
     def getDomain(self):
         return self.myDomain
     
