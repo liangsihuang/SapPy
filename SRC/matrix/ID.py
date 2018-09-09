@@ -69,6 +69,9 @@ class ID(object):
     # overloaded operators
     def __getitem__(self, x):
         return self.data[x]
+    
+    def __setitem__(self, key, value):
+        self.data[key] = value
 
 
 

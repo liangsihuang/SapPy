@@ -30,7 +30,9 @@ class MapOfTaggedObjects(TaggedObject):
         else:
             removed = self.theMap.pop(tag)
             return removed
-        
+    
+    def getNumComponents(self):
+        return len(self.theMap)
     
     
 

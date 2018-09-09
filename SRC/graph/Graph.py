@@ -4,7 +4,7 @@ class Graph(object):
     START_VERTEX_NUM = 0
 
     def __init__(self, theVerticesStorage):
-        # theVerticesStorage is TaggedObjectStorage
+        # theVerticesStorage is TaggedObjectStorage , usually MapOfTaggedObjects
         self.myVertices = theVerticesStorage
         self.numEdge = 0
         self.nextFreeTag = Graph.START_VERTEX_NUM
@@ -53,19 +53,28 @@ class Graph(object):
         return res
     
     def getVertexs(self):
-        pass
+        return self.myVertices
     
     def getNumVertex(self):
-        pass
+        return self.myVertices.getNumComponents()
     
     def getNumEdge(self):
-        pass
+        return self.numEdge
+
     def getFreeTag(self):
-        pass
+        return self.nextFreeTag
+
     def removeVertex(self, tag, removeEdgeFlag = True):
-        pass
+        result = self.myVertices.removeComponent(tag)
+        if result == 0:
+            return 0
+        if removeEdgeFlag == True:
+            # remove all edges associated with the vertex
+            print('Graph::removeVertex(int tag, bool flag = true) - no code to remove edges yet.\n')
+        return result
     
     def merge(self, other):
+        # other is Graph
         pass
     
     
