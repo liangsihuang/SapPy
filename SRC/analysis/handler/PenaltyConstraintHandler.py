@@ -1,5 +1,5 @@
 from SRC.analysis.handler.ConstraintHandler import ConstraintHandler
-from SRC.analysis.model.DOF_Group import DOF_Group
+from SRC.analysis.model.dof_grp.DOF_Group import DOF_Group
 from SRC.analysis.model.fe_ele.FE_Element import FE_Element
 from SRC.analysis.model.fe_ele.PenaltySP_FE import PenaltySP_FE
 

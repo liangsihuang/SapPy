@@ -18,7 +18,7 @@ class AnalysisModel(MovableObject):
         self.myDomain = None
         self.myHandler = None
 
-        self.myDOFGraph = None
+        self.myDOFGraph = None      # 两者有什么区别？？？？？？？？
         self.myGroupGraph = None
 
         self.numFE_Ele = 0         # number of FE_Elements objects added
@@ -139,14 +139,14 @@ class AnalysisModel(MovableObject):
                                 eqn2 - AnalysisModel.START_EQN_NUM + AnalysisModel.START_VERTEX_NUM)
         return self.myDOFGraph
  
-    def getDOFGroupGraph(self):
+    def getDOFGroupGraph(self): # 和 getDOFGraph() 有什么区别？
         if self.myGroupGraph == None:
             numVertex = self.getNumDOF_Groups()
             if numVertex == 0:
                 print('WARNING AnalysisMode::getGroupGraph - 0 vertices, has the Domain been populated?\n')
                 # exit(self, -1)
             graphStorage = MapOfTaggedObjects()
-            self.myGroupGraph = Graph(graphStorage)
+            self.myGroupGraph = Graph(graphStorage) # 重点！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
             # now create the vertices with a reference equal to the DOF_Group number.
             # and a tag which ranges from 0 through numVertex-1
             theDOFs = self.getDOFs().getComponents()

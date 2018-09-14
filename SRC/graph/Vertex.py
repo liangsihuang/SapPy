@@ -8,9 +8,9 @@ class Vertex(TaggedObject):
         self.myWeight = weight
         self.myColor = color
 
-        self.myDegree = 0  # ??
+        self.myDegree = 0  # degree of node i is number of edges meeting at node i or number of vertices adjacent to it
         self.myTmp = 0
-        self.myAdjacency = ID(size=0, arraySize=8)
+        self.myAdjacency = ID(size=0, arraySize=8)  # two nodes are said to be adjacent if they are connected by an edge
 
     # set method
     def setWeight(self, newWeight):

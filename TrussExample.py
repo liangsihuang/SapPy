@@ -56,6 +56,7 @@ theDomain.addSP_Constraint(sp6)
 theSeries = LinearSeries()
 theLoadPattern = LoadPattern(1)
 theLoadPattern.setTimeSeries(theSeries)
+theDomain.addLoadPattern(theLoadPattern)
 
 theLoadValues = [100.0, -50.0]
 theLoad = NodalLoad(1, 4, theLoadValues)

@@ -2,20 +2,19 @@ import numpy as np
 
 class ID(object):
     
-    def __init__(self, size=0, arraySize=0):
+    def __init__(self, size=0):
         self.sz = size # sz是实际数据的数量， arraySize 是数组容量的大小
         self.data = None
-        self.arraySize = arraySize
         self.fromFree = 0 # 什么用？
-        
         if(arraySize>0):
-            self.data = np.zeros((arraySize,1), dtype = int)
-    
+            self.data = np.zeros(arraySize, dtype = int)
+
     # utility methods
-    def setData(self, newData, size, cleanIt):
+    def setData(self, newData, cleanIt=False):
+        # newData is np.array, 一维，数据类型为int
         self.data = newData
-        self.sz = size
-        if(cleanIt==False):
+        self.sz = len(self.data)
+        if cleanIt == False:
             self.fromFree = 1
         else:
             self.fromFree = 0

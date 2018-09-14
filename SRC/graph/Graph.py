@@ -10,10 +10,9 @@ class Graph(object):
         self.nextFreeTag = Graph.START_VERTEX_NUM
 
         theObjects = theVerticesStorage.getComponents()
-        for theObject in theObjects:
+        for key, theObject in theObjects.items():
             if theObject.getTag() > self.nextFreeTag:
                 self.nextFreeTag = theObject.getTag() + 1
-        theVerticesStorage.clearAll()
 
 
     def addVertex(self, vertex, checkAdjacency=True):

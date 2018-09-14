@@ -22,8 +22,8 @@ class RCM(GraphNumberer):
             return self.theRefResult
 
         # we first set the Tmp of all vertices to -1, indicating they have not yet been added.
-        vertexIter = theGraph.getVertices().getComponents()
-        for key, vertex in vertexIter:
+        vertexs = theGraph.getVertices().getComponents()
+        for key, vertex in vertexs.items():
             vertex.setTmp(-1)
         
         # we now set up; setting our markers and getting first vertex
@@ -35,7 +35,7 @@ class RCM(GraphNumberer):
                 startVertexTag = -1
         
         # if no starting vertex use the first one we get from the VertexIter
-        vertexIter2 = theGraph.getVertices().getComponents()
+        vertexIter2 = iter(theGraph.getVertices().getComponents())
         if startVertexTag == -1:
             vertex = next(vertexIter2)
             start = vertex
