@@ -1,4 +1,4 @@
-from SRC.analysis.model.FE_Element import FE_Element
+from SRC.analysis.model.fe_ele.FE_Element import FE_Element
 from SRC.matrix.ID import ID
 
 class PenaltySP_FE(FE_Element):

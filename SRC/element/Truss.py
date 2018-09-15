@@ -1,6 +1,7 @@
 from SRC.element.Element import Element
 import numpy as np
 from SRC.matrix.Vector import Vector
+from SRC.matrix.ID import ID
 from math import sqrt
 class Truss(Element):
     ELE_TAG_Truss = 12
@@ -9,7 +10,11 @@ class Truss(Element):
     def __init__(self, tag, dim, Nd1, Nd2, theMaterial, A, r=0.0, damp=0, cm=0):
         super().__init__(tag, Truss.ELE_TAG_Truss)
         self.theMaterial = theMaterial
-        self.connectedExternalNodes = np.array([Nd1, Nd2])
+        
+        self.connectedExternalNodes = ID(2)  # 存储节点号
+        self.connectedExternalNodes[0] = Nd1
+        self.connectedExternalNodes[1] = Nd2
+
         self.dimension = dim   # truss in 2 or 3d domain
         self.numDOF = 0        # number of dof for truss ??
 
@@ -25,7 +30,7 @@ class Truss(Element):
         self.cMass = cm                # consistent mass flag
 
         self.cosX = [0, 0, 0]      # direction cosines
-        self.theNodes = [None, None] # int指针数组 对应 list , 和 connectedExternalNodes 有什么区别？一个存储节点号，一个存储节点本身
+        self.theNodes = [None, None] # 存储节点本身
         self.initialDisp = None     # narray
     
     # public methods to obtain information about dof and connectivity
@@ -37,6 +42,7 @@ class Truss(Element):
         return self.theNodes
     def getNumDOF(self):
         return self.numDOF
+        
     def setDomain(self, theDomain):
         # check Domain is not null - invoked when object removed from the a domain
         if (self.theDomain==None):

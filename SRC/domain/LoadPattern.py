@@ -25,7 +25,18 @@ class LoadPattern(DomainComponent):
         self.theSeries = theTimeSeries
 
     def setDomain(self, theDomain):
-        pass
+        for tag in self.theNodalLoads:
+            nodLoad = self.theNodalLoads.getComponent(tag)
+            nodLoad.setDomain(theDomain)
+        for tag in self.theElementalLoads:
+            eleLoad = self.theElementalLoads.getComponent(tag)
+            eleLoad.setDomain(theDomain)
+        for tag in self.theSPs:
+            theSP = self.theSPs.getComponent(tag)
+            theSP.setDomain(theDomain)
+        
+        super().setDomain(theDomain)
+
     # methods to add loads
     def addNodalLoad(self, load):
         theDomain = self.getDomain()
@@ -40,11 +51,11 @@ class LoadPattern(DomainComponent):
         pass
     
     def getNodalLoads(self):
-        pass
+        return self.theNodalLoads
     def getElementalLoads(self):
-        pass
+        return self.theElementalLoads
     def getSPs(self):
-        pass
+        return self.theSPs
 
     # methods to remove loads
     def clearAll(self):

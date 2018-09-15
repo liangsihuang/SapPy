@@ -75,7 +75,7 @@ class Domain(object):
         # check all the element nodes exists in the domain
         nodes = element.getExternalNodes()
         numDOF = 0
-        for i in range(0,nodes.Size()):
+        for i in range(0, nodes.Size()):
             nodeTag = nodes[i]
             node = self.getNode(nodeTag)
             if node == None:
@@ -109,9 +109,7 @@ class Domain(object):
         dof = spConstraint.getDOF_Number()
 
         # check node exists in the domain
-        if(self.theNodes.hasComponent(nodeTag)):
-            pass
-        else:
+        if self.theNodes.getComponent(nodeTag) == None:
             print('Domain::addSP_Constraint - cannot add as node with tag ')
             print(str(nodeTag)+' dose not exist in the domain.\n')
 
@@ -124,9 +122,10 @@ class Domain(object):
 
         # check if an exsiting SP_Constraint exists for that dof at the node
         found = False
-        for k, v in self.theSPs.items():
-            spNodeTag = v.getNodeTag()
-            spDof = v.getDOF_Number()
+        for tag in self.theSPs:
+            sp = self.theSPs.getComponent(tag)
+            spNodeTag = sp.getNodeTag()
+            spDof = sp.getDOF_Number()
             if(nodeTag == spNodeTag & dof == spDof):
                 found = True
         if(found == True):
@@ -134,7 +133,7 @@ class Domain(object):
             
         # check that no other object with similar tag exists in model
         tag = spConstraint.getTag()
-        if(self.theSPs.hasComponent(tag)):
+        if self.theSPs.getComponent(tag) != None:
             print('Domain::addSP_Constraint - cannot add as constraint with tag ')
             print(str(tag)+' already exists in the domain.\n')
         else:
@@ -206,29 +205,33 @@ class Domain(object):
         return self.theLoadPatterns
     def getDomainAndLoadPatternSPs(self):
         allSPs = []
-        allSPs.append(self.theSPs)
-        for key, value in self.theLoadPatterns:
-            allSPs.append(value)
+
+        for tag in self.theSPs:
+            sp = self.theSPs.getComponent(tag)
+            allSPs.append(sp)
+
+        for key in self.theLoadPatterns:
+            lp = self.theLoadPatterns.getComponent(key)
+            theSPs = lp.getSPs()
+            for tag in theSPs:
+                sp = theSPs.getComponent(tag)
+                allSPs.append(sp)
         return allSPs
-        # 怎么return loadPattern 里面的 theSPs ，loadPattern的个数并不确定，怎么办？ 返回一个 list
-        
 
     # def getParameters():
     #     pass
     def getElement(self, tag):
-        pass
-        
+        return self.theElements.getComponent(tag)
     def getNode(self, tag):
-        return self.theNodes.get(tag, d=None)
-
+        return self.theNodes.getComponent(tag)
     def getSP_Constraint(self, tag):
-        pass
+        return self.theSPs.getComponent(tag)
     def getPressure_Constraint(self, tag):
         pass
     def getMP_Constraint(self, tag):
         pass
     def getLoadPattern(self, tag):
-        pass
+        return self.theLoadPatterns.getComponent(tag)
 
     # methods to query the state of the domain
     def getCurrentTime(self):
@@ -282,18 +285,22 @@ class Domain(object):
         self.currentTime = timeStep
         self.dT = self.currentTime - self.committedTime
         # first loop over nodes and elements getting them to first zero their loads
-        for tag, node in self.theNodes:
+        for tag in self.theNodes:
+            node = self.theNodes.getComponent(tag)
             node.zeroUnbalancedLoad()
-        for tag, ele in self.theElements:
+        for tag in self.theElements:
+            ele = self.theElements.getComponent(tag)
             if(ele.isSubdomain()==False):
                 ele.zeroLoad()
         # now loop over load patterns, invoking applyLoad on them
-        for tag, loadPat in self.theLoadPatterns:
+        for tag in self.theLoadPatterns:
+            loadPat = self.theLoadPatterns.getComponent(tag)
             loadPat.applyLoad(timeStep)
         # finally loop over the MP_Constraints and SP_Constraints of the domain
         # for tag, theMP in self._theMPs:
             # theMP.applyConstraint(timeStep)
-        for tag, theSP in self.theSPs:
+        for tag in self.theSPs:
+            theSP = self.theSPs.getComponent(tag)
             theSP.applyConstraint(timeStep)
     
     def setLoadConstant(self):

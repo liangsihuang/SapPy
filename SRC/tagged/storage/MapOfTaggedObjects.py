@@ -4,9 +4,10 @@ class MapOfTaggedObjects(TaggedObject):
 
     def __init__(self):
         self.theMap = {}
+        self.myIter = iter(self.theMap)
 
     def getComponent(self, tag):
-        return self.theMap.get(tag, d=None)
+        return self.theMap.get(tag, None)
 
     def addComponent(self, newComponent):
         tag = newComponent.getTag()
@@ -15,11 +16,14 @@ class MapOfTaggedObjects(TaggedObject):
             self.theMap[tag] = newComponent
             # check if sucessfully added
             if self.theMap.__contains__(tag) == False:
-                print('MapOfTaggedObjects::addComponent - dict(python) failed to add object with tag :'+str(newComponent.getTag())+'.\n')
+                print('MapOfTaggedObjects::addComponent - dict(python) failed to add object with tag :'
+                +str(newComponent.getTag())+'.\n')
                 return False
+            self.myIter = iter(self.theMap)
             return True
         else:
-            print('MapOfTaggedObjects::addComponent - not adding as one with similar tag exists, tag:'+str(newComponent.getTag())+'.\n')
+            print('MapOfTaggedObjects::addComponent - not adding as one with similar tag exists, tag:'
+            +str(newComponent.getTag())+'.\n')
             return False
     
     def removeComponent(self, tag):
@@ -34,7 +38,9 @@ class MapOfTaggedObjects(TaggedObject):
     def getNumComponents(self):
         return len(self.theMap)
     
-    
+    def __iter__(self):
+        return self.myIter
+
 
          
         

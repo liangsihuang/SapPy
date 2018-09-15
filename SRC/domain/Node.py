@@ -11,7 +11,7 @@ class Node(DomainComponent):
 
         
         self.Crd = Vector(len(Crd))        # Crd是可变参数，接收到的是一个 tuple
-        for i in len(Crd):
+        for i in range(0,len(Crd)):
             self.Crd[i] = Crd[i] 
         
         self.commitDisp = Vector(0)
