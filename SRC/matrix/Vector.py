@@ -5,9 +5,9 @@ class Vector(object):
         self.sz = size   # int
         self.data = data # np.narray
         self.fromFree = 0
-        if (size > 0) and (data == None):
+        if (size > 0) and (data == None).all():
             self.data = np.zeros(size)
-        if (size != 0) and (data != None):
+        if (size != 0) and (data != None).all():
             self.fromFree = 1
 
     # utility methods

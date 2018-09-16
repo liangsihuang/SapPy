@@ -1,10 +1,19 @@
 from SRC.element.Element import Element
-import numpy as np
 from SRC.matrix.Vector import Vector
 from SRC.matrix.ID import ID
+from SRC.matrix.Matrix import Matrix
 from math import sqrt
+import numpy as np
 class Truss(Element):
     ELE_TAG_Truss = 12
+    trussM2 = Matrix(2, 2)
+    trussM4 = Matrix(4, 4)
+    trussM6 = Matrix(6, 6)
+    trussM12 = Matrix(12, 12)
+    trussV2 = Vector(2) 
+    trussV4 = Vector(4)
+    trussV6 = Vector(6)
+    trussV12 = Vector(12)
 
 
     def __init__(self, tag, dim, Nd1, Nd2, theMaterial, A, r=0.0, damp=0, cm=0):
@@ -45,7 +54,7 @@ class Truss(Element):
         
     def setDomain(self, theDomain):
         # check Domain is not null - invoked when object removed from the a domain
-        if (self.theDomain==None):
+        if (theDomain==None):
             self.theNodes = [None, None]
             self.L = 0
             return
@@ -73,7 +82,7 @@ class Truss(Element):
             print('WARNING Truss::setDomain(): nodes '+str(Nd1)+' and '+str(Nd2)+'have differing dof at ends for truss '+str(self.getTag())+'.\n')
             # fill this in so don't segment fault later
             self.numDOF = 2
-            self.theMatrix = Truss.trussM2 # ????
+            self.theMatrix = Truss.trussM2
             self.theVector = Truss.trussV2
             return
         # call the base class method

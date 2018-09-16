@@ -14,17 +14,17 @@ class Node(DomainComponent):
         for i in range(0,len(Crd)):
             self.Crd[i] = Crd[i] 
         
-        self.commitDisp = Vector(0)
-        self.commitVel = Vector(0)
-        self.commitAccel = Vector(0)
+        self.commitDisp = None
+        self.commitVel = None
+        self.commitAccel = None
 
-        self.trialDisp = Vector(0)
-        self.trialVel = Vector(0)  
-        self.trialAccel = Vector(0)
+        self.trialDisp = None
+        self.trialVel = None
+        self.trialAccel = None
 
-        self.unbalLoad = Vector(0)       # unbalanced load
-        self.incrDisp = Vector(0)
-        self.incrDeltaDisp = Vector(0)
+        self.unbalLoad = None       # unbalanced load
+        self.incrDisp = None
+        self.incrDeltaDisp = None
 
         # double arrays holding the disp, vel and accel value
         # 对应 np.narray
@@ -34,12 +34,12 @@ class Node(DomainComponent):
 
         self.R = None        # nodal participation matrix
         self.mass = None     # mass matrix
-        self.unbalLoadWithInertia = Vector(0)
+        self.unbalLoadWithInertia = None
         self.alphaM = 0        # rayleigh damping factor
         self.theEigenvectors = None 
 
-        self.reaction = Vector(0)
-        self.displayLocation = Vector(0)
+        self.reaction = None
+        self.displayLocation = None
 
     # public methods dealing with the DOF at the node
     def getNumberDOF(self):
@@ -59,7 +59,9 @@ class Node(DomainComponent):
         pass
     # public methods for obtaining committed and trial response quantities of the node
     def getDisp(self):
-        pass
+        if self.commitDisp == None:
+            self.createDisp()
+        return self.commitDisp
     
     def getTrialDisp(self):
         if self.trialDisp == None:
@@ -98,14 +100,22 @@ class Node(DomainComponent):
         return 0
 
     # public methods for adding and obtaining load information
-    def zeroUnbalancedLoad(self):
-        if(self.unbalLoad!=[]):
-            for i in range(0,len(self.unbalLoad)):
-                self.unbalLoad[i] = 0.0
+    # def zeroUnbalancedLoad(self):
+    #     if(self.unbalLoad!=[]):
+    #         for i in range(0,len(self.unbalLoad)):
+    #             self.unbalLoad[i] = 0.0
 
     # public methods dealing with the commited state of the node
     def commitState(self):
-        pass
+        # check disp exists, if does set commit = trial, incr = 0.0
+        if self.trialDisp != None:
+            for i in range(0, self.numberDOF):
+                self.disp[i+self.numberDOF] = self.disp[i]
+                self.disp[i+2*self.numberDOF] = 0.0
+                self.disp[i+3*self.numberDOF] = 0.0
+        # check vel exists, if does set commit = trial 
+        # check accel exists, if does set commit = trial 
+        return 0
 
     def revertToLastCommit(self):
         # check disp exists, if does set trial = last commit, incr = 0
@@ -117,8 +127,19 @@ class Node(DomainComponent):
         # check vel exists, if does set trial = last commit
         # check accel exists, if does set trial = last commit
 
-    def revertToStart(self):
-        pass
+    # def revertToStart(self):
+    #     # check disp exists, if does set all to zero
+    #     if self.disp != None:
+    #         for i in range(0, 4*self.numberDOF):
+    #             self.disp[i] = 0.0
+    #     # check vel exists, if does set all to zero
+    #     # check accel exists, if does set all to zero
+
+    #     if self.unbalLoad != None:
+    #         for i in self.unbalLoad:
+    #             i = 0.0
+        
+    #     return 0
     
     # public methods for dynamic analysis
     # public methods for eigen vector
