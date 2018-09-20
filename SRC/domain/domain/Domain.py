@@ -115,10 +115,10 @@ class Domain(object):
 
         # check that the DOF specified exists at the Node
         node = self.getNode(nodeTag)
-        numDOF = node.getTag()
-        if(numDOF<dof):
-            print('Domain::addSP_Constraint - cannnot add as node with tag ')
-            print(str(nodeTag)+' does not have associated constrainted DOF\n')
+        numDOF = node.getNumberDOF()
+        if numDOF < dof :
+            print('Domain::addSP_Constraint - cannnot add as node with tag '+str(nodeTag))
+            print(' does not have associated constrainted DOF.\n')
 
         # check if an exsiting SP_Constraint exists for that dof at the node
         found = False
@@ -154,12 +154,12 @@ class Domain(object):
     def addNodalLoad(self, load, pattern):
         nodTag = load.getNodeTag()
         res = self.getNode(nodTag)
-        if(res==0):
+        if res == None:
             print('Domain::addNodalLoad() - no node with tag '+str(nodTag)+' exists in the model.\n')
             print('Not adding the nodal load.')
         # now add it to the pattern
         thePattern = self.theLoadPatterns.getComponent(pattern)
-        if(thePattern == 0):
+        if thePattern == None:
             print('Domain::addNodalLoad() - no pattern with tag '+str(pattern)+' exists in the model.\n')
             print('Not adding the nodal load.')
         thePattern.addNodalLoad(load)
