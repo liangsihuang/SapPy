@@ -9,7 +9,7 @@ class IncrementalIntegrator(Integrator):
     SECOND_TANGENT = 5
 
     def __init__(self, clasTag):
-        super().__init__(self, clasTag)
+        super().__init__(clasTag)
         self.statusFlag = self.CURRENT_TANGENT
 
         self.theSOE = None

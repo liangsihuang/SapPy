@@ -13,6 +13,12 @@ class StaticAnalysis(Analysis):
         self.theTest = theConvergenceTest
 
         self.domainStamp = 0
+
+        # first we set up the links needed by the elements in the aggregation
+        self.theAnalysisModel.setLinks(theDomain, theHandler)
+        self.theConstraintHandler.setLinks(theDomain, theModel, theStaticIntegrator)
+        self.theDOF_Numberer.setLinks(theModel)
+        self.theIntegrator.setLinks(theModel, theLinSOE, theConvergenceTest)
     
     def clearAll(self):
         pass

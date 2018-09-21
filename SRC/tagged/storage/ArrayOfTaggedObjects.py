@@ -2,20 +2,20 @@
 
 class ArrayOfTaggedObjects(object):
 
-    def __init__(self, size):
+    def __init__(self):
         self.theComponents = []        # 用自带的 list 实现
 
         self.numComponents = 0         # num of components added
-        self.sizeComponentArray = size    # size of the array
+        self.sizeComponentArray = 0    # size of the array
 
         self.positionLastEntry = 0         # marker of last position used in the array
         self.positionLastNoFitEntry = 0    # marker of place array filled up to
 
         self.fitFlag = True            # flag indicating if all components in nicely
 
-        # zero the array
-        for i in range(0,size):
-            self.theComponents[i] = None
+        # # zero the array
+        # for i in range(0,self.sizeComponentArray):
+        #     self.theComponents[i] = None
     
     def clearAll(self, invokeDestrutors):
         if(invokeDestrutors==True):

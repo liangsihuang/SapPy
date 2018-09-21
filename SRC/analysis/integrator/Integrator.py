@@ -5,7 +5,7 @@ from SRC.actor.MovableObject import MovableObject
 # 3. update the response at the DOF_Group
 class Integrator(MovableObject):
     def __init__(self, clasTag):
-        super().__init__(self, clasTag)
+        super().__init__(clasTag)
         
 
     def domainChanged(self):

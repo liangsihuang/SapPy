@@ -5,13 +5,12 @@ class LoadPattern(DomainComponent):
     PATTERN_TAG_LoadPattern = 1
 
     def __init__(self, tag, fact=1.0):
-        DomainComponent.__init__(self, tag, LoadPattern.PATTERN_TAG_LoadPattern)
+        super().__init__(tag, LoadPattern.PATTERN_TAG_LoadPattern)
         self.isConstant = 1        # to indicate whether setConstant has been called
-
         self.loadFactor = 0        # current load factor
         self.scaleFactor = fact    # factor to scale load factor from time series
 
-        self.theSeries = None      # pointer to associated TimeSeries
+        self.theSeries = None      
 
         self.currentGeoTag = 0
         self.lastGeoSendTag = -1
@@ -41,8 +40,9 @@ class LoadPattern(DomainComponent):
     def addNodalLoad(self, load):
         theDomain = self.getDomain()
         self.theNodalLoads.addComponent(load)
-        load.setDomain(theDomain)
-        load.setPatternTag(self.getTag())
+        if theDomain is not None:
+            load.setDomain(theDomain)
+        load.setLoadPatternTag(self.getTag())
         self.currentGeoTag += 1
         
     def addElementalLoad(self, load):

@@ -3,7 +3,7 @@ from SRC.analysis.algorithm.SolutionAlgorithm import SolutionAlgorithm
 class EquiSolnAlgo(SolutionAlgorithm):
 
     def __init__(self, clasTag):
-        super().__init__(self, clasTag)
+        super().__init__(clasTag)
 
         self.theModel = None
         self.theIntegrator = None

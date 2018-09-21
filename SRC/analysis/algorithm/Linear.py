@@ -5,7 +5,7 @@ class Linear(EquiSolnAlgo):
     CURRENT_TANGENT = 0
 
     def __init__(self, theTangent = CURRENT_TANGENT, Fact = 0):
-        EquiSolnAlgo.__init__(Linear.EquiALGORITHM_TAGS_Linear)
+        super().__init__(Linear.EquiALGORITHM_TAGS_Linear)
         self.incrTangent = theTangent
         self.factorOnce = Fact
 

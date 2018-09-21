@@ -12,8 +12,8 @@ class AnalysisModel(MovableObject):
     def __init__(self):
         MovableObject.__init__(self, self.AnaMODEL_TAGS_AnalysisModel)
 
-        self.theFEs = ArrayOfTaggedObjects(256)
-        self.theDOFs = ArrayOfTaggedObjects(256)
+        self.theFEs = ArrayOfTaggedObjects()
+        self.theDOFs = ArrayOfTaggedObjects()
         
         self.myDomain = None
         self.myHandler = None
@@ -256,8 +256,9 @@ class AnalysisModel(MovableObject):
 
     def analysisStep(self, dT=0.0):
         # check to see there is a Domain linked to the Model
-        if(self.myDomain==None):
+        if self.myDomain is None:
             print('WARNING: AnalysisModel::newStep. No domain linked.\n')
+            return -1
         # invoke the method
         return self.myDomain.analysisStep(dT)
 

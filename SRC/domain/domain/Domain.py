@@ -145,22 +145,35 @@ class Domain(object):
 
     def addMP_Constraint(self):
         pass
-        
 
     def addLoadPattern(self, LoadPattern):
-        pass
+        # first check if a load pattern with a similar tag exists in model
+        tag = LoadPattern.getTag()
+        other = self.theLoadPatterns.getComponent(tag)
+        if other is not None:
+            print('Domain::addLoadPattern - cannot add as LoadPattern with tag'+str(tag)+' already exists in model.\n')
+            return False
+        # now we add the load pattern to the container for load pattrens
+        result = self.theLoadPatterns.addComponent(LoadPattern)
+        if result == True:
+            LoadPattern.setDomain(self)
+            self.domainChange()
+        else:
+            print('Domain::addLoadPattern - cannot add LoadPattern with tag'+str(tag)+'to the container.\n')
+        return result
 
     # methods to add components to a LoadPattern object
     def addNodalLoad(self, load, pattern):
+        # pattern(int) 是 loadPattern对象的tag!
         nodTag = load.getNodeTag()
         res = self.getNode(nodTag)
-        if res == None:
-            print('Domain::addNodalLoad() - no node with tag '+str(nodTag)+' exists in the model.\n')
+        if res is None:
+            print('Domain::addNodalLoad() - no node with tag '+str(nodTag)+' exists in the model.')
             print('Not adding the nodal load.')
         # now add it to the pattern
         thePattern = self.theLoadPatterns.getComponent(pattern)
-        if thePattern == None:
-            print('Domain::addNodalLoad() - no pattern with tag '+str(pattern)+' exists in the model.\n')
+        if thePattern is None:
+            print('Domain::addNodalLoad() - no pattern with tag '+str(pattern)+' exists in the model.')
             print('Not adding the nodal load.')
         thePattern.addNodalLoad(load)
         load.setDomain(self)
