@@ -1,4 +1,4 @@
-from tagged.TaggedObject import TaggedObject
+from SRC.tagged.TaggedObject import TaggedObject
 from actor.MovableObject import MovableObject
 
 class TimeSeries(TaggedObject, MovableObject):

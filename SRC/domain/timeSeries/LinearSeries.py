@@ -1,4 +1,4 @@
-from domain.timeSeries.TimeSeries import TimeSeries
+from SRC.domain.timeSeries.TimeSeries import TimeSeries
 
 class LinearSeries(TimeSeries):
     TSERIES_TAG_LinearSeries = 1

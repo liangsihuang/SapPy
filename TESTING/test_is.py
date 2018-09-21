@@ -3,3 +3,5 @@ a = Domain()
 
 if a is Domain:
     print('1')
+else:
+    print('2')
