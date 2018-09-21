@@ -19,7 +19,7 @@ class Domain(object):
         self.hasDomainChangedFlag = False      # a bool flag used to indicate if GeoTag needs to be ++
         self.lastGeoSendTag = -1               # the value of currentGeoTag when sendSelf was last invoked
 
-        self.nodeGraphBuiltFlag = False # 干啥的？
+        self.nodeGraphBuiltFlag = False 
         self.eleGraphBuiltFlag = False
 
         self.theBounds = Vector(6)
