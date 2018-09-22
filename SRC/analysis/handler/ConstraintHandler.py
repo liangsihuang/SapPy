@@ -20,6 +20,7 @@ class ConstraintHandler(MovableObject):
         # iterate through the FE_Element getting them to set their IDs
         for theEle in self.theAnalysisModel.getFEs():
             theEle.setID()
+        return 0
     
     def getDomain(self):
         return self.theDomain
@@ -38,3 +39,5 @@ class ConstraintHandler(MovableObject):
             theNod = theNodes.getComponent(tag)
             theNod.setDOF_Group(None)
     
+    def applyLoad(self):
+        return 0 # 有什么作用？可能有些子类不需要，有些子类要重写这个方法。保证代码通用？

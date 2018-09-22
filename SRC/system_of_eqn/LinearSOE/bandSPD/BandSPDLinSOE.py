@@ -64,10 +64,11 @@ class BandSPDLinSOE(LinearSOE):
         
         # invoke setSize() on the Solver
         theSolver = self.getSolver()
-        solverOK = theSolver.setSize()
-        if solverOK<0:
-            print('WARNING: BandSPDLinSOE::setSize() - solver failed setSize().\n')
-            return solverOK
+        # 因为theSolver.setSize() do nothing
+        # solverOK = theSolver.setSize()
+        # if solverOK<0:
+        #     print('WARNING: BandSPDLinSOE::setSize() - solver failed setSize().\n')
+        #     return solverOK
 
         return result
 

@@ -9,8 +9,8 @@ class Graph(object):
         self.numEdge = 0
         self.nextFreeTag = Graph.START_VERTEX_NUM
 
-        theObjects = theVerticesStorage.getComponents()
-        for key, theObject in theObjects.items():
+        for key in self.myVertices:
+            theObject = self.myVertices.getComponent(key)
             if theObject.getTag() > self.nextFreeTag:
                 self.nextFreeTag = theObject.getTag() + 1
 
@@ -51,7 +51,7 @@ class Graph(object):
         res = self.myVertices.getComponent(vertexTag)
         return res
     
-    def getVertexs(self):
+    def getVertices(self):
         return self.myVertices
     
     def getNumVertex(self):

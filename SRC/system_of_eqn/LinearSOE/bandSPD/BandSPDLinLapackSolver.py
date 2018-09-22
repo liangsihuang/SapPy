@@ -26,3 +26,7 @@ class BandSPDLinLapackSolver(BandSPDLinSolver):
 		
 		self.theSOE.factored = True
 		return 0
+	
+	def setSize(self):
+		# nothing to do ????????
+		return 0

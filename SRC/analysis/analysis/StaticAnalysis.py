@@ -98,16 +98,34 @@ class StaticAnalysis(Analysis):
         # DOFs in the AnalysisModel.
         result = self.theDOF_Numberer.numberDOF()
         if result < 0:
-            print('StaticAnalysis::handle() - DOF_Numberer::numberDOF() failed.')
+            print('StaticAnalysis::domainChanged() - DOF_Numberer::numberDOF() failed.')
             return -2
         
         result = self.theConstraintHandler.doneNumberingDOF()
         if result < 0:
-            print('StaticAnalysis::handle() - ConstraintHandler::doneNumberingDOF() failed.')
+            print('StaticAnalysis::domainChanged() - ConstraintHandler::doneNumberingDOF() failed.')
             return -2
         # we invoke setSize() on the LinearSOE which causes that object to determine its size
         theGraph = self.theAnalysisModel.getDOFGraph()
         result = self.theSOE.setSize(theGraph)
+        if result < 0:
+            print('StaticAnalysis::domainChanged() - LinearSOE::setSize() failed')
+            return -3
+        # if self.theEigenSOE is not None:
+        self.theAnalysisModel.clearDOFGraph()
+
+        # finally we invoke domainChanged on the Integrator and Algorithm objects .. informing them that the model has changed
+        result = self.theIntegrator.domainChanged()
+        if result < 0:
+            print('StaticAnalysis::domainChanged() - Integrator::domainChanged() failed')
+            return -4
+        
+        result = self.theAlgorithm.domainChanged()
+        if result < 0:
+            print('StaticAnalysis::domainChanged() - Algorithm::domainChanged() failed')
+            return -5
+        
+        return 0
         
 
     def setNumberer(self, theNumberer):

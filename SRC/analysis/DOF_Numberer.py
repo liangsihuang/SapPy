@@ -17,7 +17,7 @@ class DOF_Numberer(MovableObject):
     
     
     
-    def numberDOF(self, lastDOF_Group): # 有重载怎么办？？？DOF_Numberer::numberDOF(ID &lastDOFs)
+    def numberDOF(self, lastDOF_Group=-1): # 有重载怎么办？？？DOF_Numberer::numberDOF(ID &lastDOFs)
         
         # check we have a model and a numberer
         theDomain = None

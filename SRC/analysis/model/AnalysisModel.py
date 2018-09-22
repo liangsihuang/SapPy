@@ -108,7 +108,7 @@ class AnalysisModel(MovableObject):
             self.myDOFGraph = Graph(graphStorage)
 
             # create a vertex for each dof
-            theDOFs = self.getDOFs().getComponents()
+            theDOFs = self.getDOFs()
             for dof in theDOFs:
                 id1= dof.getID()
                 size = id1.Size()
@@ -122,7 +122,7 @@ class AnalysisModel(MovableObject):
                                 print('WARNING AnalysisModel::getDOFGraph - error adding vertex.\n')
                                 return self.myDOFGraph
             # now add the edges, by looping over the FE_elements, getting their IDs and adding edges between DOFs for equation numbers >= START_EQN_NUM
-            theFEs = self.getFEs().getComponents()
+            theFEs = self.getFEs()
             cnt = 0
             for ele in theFEs:
                 id1 = ele.getID()
@@ -143,13 +143,13 @@ class AnalysisModel(MovableObject):
         if self.myGroupGraph == None:
             numVertex = self.getNumDOF_Groups()
             if numVertex == 0:
-                print('WARNING AnalysisMode::getGroupGraph - 0 vertices, has the Domain been populated?\n')
+                print('WARNING AnalysisMode::getDOFGroupGraph - 0 vertices, has the Domain been populated?\n')
                 # exit(self, -1)
             graphStorage = MapOfTaggedObjects()
             self.myGroupGraph = Graph(graphStorage) # 重点！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
             # now create the vertices with a reference equal to the DOF_Group number.
             # and a tag which ranges from 0 through numVertex-1
-            theDOFs = self.getDOFs().getComponents()
+            theDOFs = self.getDOFs()
             count = AnalysisModel.START_VERTEX_NUM
             for dof in theDOFs:
                 DOF_GroupTag = dof.getTag()
@@ -159,8 +159,8 @@ class AnalysisModel(MovableObject):
                 self.myGroupGraph.addVertex(vertex)
             # now add the edges, by looping over the Elements, getting their
             # IDs and adding edges between DOFs for equation numbers >= START_EQN_NUM
-            theFEs = self.getFEs.getComponents()
-            for ele in theFEs:
+            theFEs = self.getFEs()
+            for ele in theFEs: 
                 id1 = ele.getDOFtags()
                 size = id1.Size()
                 for i in range(0, size):
@@ -175,40 +175,40 @@ class AnalysisModel(MovableObject):
     # which in turn set the new nodal trial response quantities
     def setResponse(self, disp, vel, accel):
         # all is Vector
-        theDOFGrps = self.getDOFs().getComponents()
+        theDOFGrps = self.getDOFs()
         for dof in theDOFGrps:
             dof.setNodeDisp(disp)
             dof.setNodeVel(vel)
             dof.setNodeAccel(accel)
 
     def setDisp(self, disp):
-        theDOFGrps = self.getDOFs().getComponents()
+        theDOFGrps = self.getDOFs()
         for dof in theDOFGrps:
             dof.setNodeDisp(disp)
 
     def setVel(self, vel):
-        theDOFGrps = self.getDOFs().getComponents()
+        theDOFGrps = self.getDOFs()
         for dof in theDOFGrps:
             dof.setNodeVel(vel)
 
     def setAccel(self, accel):
-        theDOFGrps = self.getDOFs().getComponents()
+        theDOFGrps = self.getDOFs()
         for dof in theDOFGrps:
             dof.setNodeAccel(accel)
 
     def incrDisp(self, disp):
         # disp 是 Vector
-        theDOFGrps = self.getDOFs().getComponents()
+        theDOFGrps = self.getDOFs()
         for dof in theDOFGrps:
             dof.incrNodeDisp(disp)
 
     def incrVel(self, vel):
-        theDOFGrps = self.getDOFs().getComponents()
+        theDOFGrps = self.getDOFs()
         for dof in theDOFGrps:
             dof.incrNodeVel(vel)
 
     def incrAccel(self, accel):
-        theDOFGrps = self.getDOFs().getComponents()
+        theDOFGrps = self.getDOFs()
         for dof in theDOFGrps:
             dof.incrNodeAccel(accel)
     

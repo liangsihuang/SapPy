@@ -4,7 +4,7 @@ class ArrayOfTaggedObjects(object):
 
     def __init__(self):
         self.theComponents = []        # 用自带的 list 实现
-
+        self.myIter = iter(self.theComponents)
         self.numComponents = 0         # num of components added
         self.sizeComponentArray = 0    # size of the array
 
@@ -53,9 +53,8 @@ class ArrayOfTaggedObjects(object):
         self.theComponents.append(newComponent)
         return True
     
-    def getComponents(self):
-        return self.theComponents
-
+    def __iter__(self):
+        return self.myIter
 
 
 
