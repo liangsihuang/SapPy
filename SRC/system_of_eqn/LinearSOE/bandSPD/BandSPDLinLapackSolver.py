@@ -1,10 +1,10 @@
-from system_of_eqn.LinearSOE.bandSPD.BandSPDLinSolver import BandSPDLinSolver
+from SRC.system_of_eqn.LinearSOE.bandSPD.BandSPDLinSolver import BandSPDLinSolver
 from scipy.linalg import solveh_banded
 class BandSPDLinLapackSolver(BandSPDLinSolver):
 	SOLVER_TAGS_BandSPDLinLapackSolver = 3
 
 	def __init__(self):
-		super().__init__(self.SOLVER_TAGS_BandSPDLinLapackSolver)
+		super().__init__(BandSPDLinLapackSolver.SOLVER_TAGS_BandSPDLinLapackSolver)
 	
 	def solve(self):
 		if(self.theSOE==None):

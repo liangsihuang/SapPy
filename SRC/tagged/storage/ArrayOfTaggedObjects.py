@@ -17,19 +17,20 @@ class ArrayOfTaggedObjects(object):
         # for i in range(0,self.sizeComponentArray):
         #     self.theComponents[i] = None
     
-    def clearAll(self, invokeDestrutors):
-        if(invokeDestrutors==True):
-            # go through and invoke the components object destructors and set the array pointer to 0
-            for i in range(0,self.positionLastEntry+1):
-                if(self.theComponents[i]!=None):
-                    del self.theComponents[i]
-                    self.theComponents[i] = None
-        else:
-            # just set the array pointers to 0
-            for i in range(0,self.positionLastEntry+1):
-                if(self.theComponents[i]!=None):
-                    self.theComponents[i] = None
-
+    # def clearAll(self, invokeDestrutors):
+    def clearAll(self):
+        # if(invokeDestrutors==True):
+        #     # go through and invoke the components object destructors and set the array pointer to 0
+        #     for i in range(0,self.positionLastEntry+1):
+        #         if(self.theComponents[i]!=None):
+        #             del self.theComponents[i]
+        #             self.theComponents[i] = None
+        # else:
+        #     # just set the array pointers to 0
+        #     for i in range(0,self.positionLastEntry+1):
+        #         if(self.theComponents[i]!=None):
+        #             self.theComponents[i] = None
+        self.theComponents = []
         self.positionLastEntry = 0
         self.positionLastNoFitEntry = 0
         self.fitFlag = True

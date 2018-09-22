@@ -218,7 +218,6 @@ class Domain(object):
         return self.theLoadPatterns
     def getDomainAndLoadPatternSPs(self):
         allSPs = []
-
         for tag in self.theSPs:
             sp = self.theSPs.getComponent(tag)
             allSPs.append(sp)

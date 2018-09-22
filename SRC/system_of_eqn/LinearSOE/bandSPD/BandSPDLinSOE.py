@@ -1,6 +1,6 @@
-from system_of_eqn.LinearSOE.LinearSOE import LinearSOE
+from SRC.system_of_eqn.LinearSOE.LinearSOE import LinearSOE
 import numpy as np
-from matrix.Vector import Vector
+from SRC.matrix.Vector import Vector
 
 # subclass of LinearSOE
 # It uses the LAPACK Upper storage scheme to store the components of the A matrix

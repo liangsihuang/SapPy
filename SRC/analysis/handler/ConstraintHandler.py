@@ -28,3 +28,13 @@ class ConstraintHandler(MovableObject):
     def getIntegrator(self):
         return self.theIntegrator
     
+    def clearAll(self):
+        # for the nodes reset the DOF_Group pointers to 0
+        theDomain = self.getDomain()
+        if theDomain is None:
+            return
+        theNodes = theDomain.getNodes()
+        for tag in theNodes:
+            theNod = theNodes.getComponent(tag)
+            theNod.setDOF_Group(None)
+    

@@ -1,4 +1,4 @@
-from system_of_eqn.LinearSOE.LinearSOESolver import LinearSOESolver
+from SRC.system_of_eqn.LinearSOE.LinearSOESolver import LinearSOESolver
 
 class BandSPDLinSolver(LinearSOESolver):
 

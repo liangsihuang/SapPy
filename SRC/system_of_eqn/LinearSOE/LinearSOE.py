@@ -1,4 +1,4 @@
-from actor.MovableObject import MovableObject
+from SRC.actor.MovableObject import MovableObject
 
 # LinearSOE:
 # storing linear system of equations of form Ax = b

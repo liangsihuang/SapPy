@@ -90,14 +90,26 @@ class StaticAnalysis(Analysis):
         # now we invoke handle() on the constraint handler which causes the creation of FE_Element
         # and DOF_Group objects and their addition to the AnalysisModel
         result = self.theConstraintHandler.handle()
-        if(result<0):
+        if result < 0:
             print('StaticAnalysis::domainChanged() - ConstraintHandler::handle() failed')
             return -1
         
         # now we invoke number() on the numberer which causes equation numbers to be assigned to all the
         # DOFs in the AnalysisModel.
+        result = self.theDOF_Numberer.numberDOF()
+        if result < 0:
+            print('StaticAnalysis::handle() - DOF_Numberer::numberDOF() failed.')
+            return -2
         
-    
+        result = self.theConstraintHandler.doneNumberingDOF()
+        if result < 0:
+            print('StaticAnalysis::handle() - ConstraintHandler::doneNumberingDOF() failed.')
+            return -2
+        # we invoke setSize() on the LinearSOE which causes that object to determine its size
+        theGraph = self.theAnalysisModel.getDOFGraph()
+        result = self.theSOE.setSize(theGraph)
+        
+
     def setNumberer(self, theNumberer):
         pass
     def setAlgorithm(self, theAlgorithm):

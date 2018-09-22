@@ -21,13 +21,14 @@ class PenaltyConstraintHandler(ConstraintHandler):
             return -1
         
         # get number of elements and nodes in the domain and init the theFEs and theDOFs arrays
-        numSPs = len(theDomain.getSPs())
+        numSPs = (theDomain.getSPs()).getNumComponents()
         # initialse the DOF_Groups and add them to the AnalysisModel. must of course set the initial IDs
         theNodes = theDomain.getNodes()
         numDofGrp = 0
         count3 = 0
         countDOF = 0
-        for tag, node in theNodes:
+        for tag in theNodes:
+            node = theNodes.getComponent(tag)
             dofGroup = DOF_Group(numDofGrp, node)
             numDofGrp += 1
             # initially set all the ID value to -2 (明明在构造函数中就设好了，不比重复做了吧)
@@ -56,21 +57,22 @@ class PenaltyConstraintHandler(ConstraintHandler):
                             +' this should not be - results suspect. \n')
         theEles = theDomain.getElements()
         numFeEle = 0
-        for tag, ele in theEles:
+        for tag in theEles:
+            ele = theEles.getComponent(tag)
             fe = FE_Element(numFeEle, ele)
             numFeEle += 1
             theModel.addFE_Element(fe)
         
         # create the PenaltySP_FE for the SP_Constraints and add to the AnalysisModel
         theSPsList = theDomain.getDomainAndLoadPatternSPs()
-        for theSPs in theSPsList:
-            for tag, sp in theSPs:
-                fe = PenaltySP_FE(numFeEle, theDomain, sp, self.alphaSP)
-                theModel.addFE_Element(fe)
-                numFeEle += 1
+        for sp in theSPsList:
+            fe = PenaltySP_FE(numFeEle, theDomain, sp, self.alphaSP)
+            theModel.addFE_Element(fe)
+            numFeEle += 1
 
         # create the PenaltyMP_FE for the MP_Constraints and add to the AnalysisModel
         # MP_Constraint 暂时不编
+        return count3
 
         
 

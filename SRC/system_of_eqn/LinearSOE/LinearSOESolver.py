@@ -1,4 +1,4 @@
-from actor.MovableObject import MovableObject
+from SRC.actor.MovableObject import MovableObject
 
 # solve the system of equations stored in a LinearSOE object
 # abstract base class
