@@ -55,7 +55,7 @@ class StaticAnalysis(Analysis):
                 print('StaticAnalysis::analyze() - the Algorithm failed at iteration: '+str(i))
                 print(' with domain at load factor '+str(theDomain.getCurrentTime())+'.\n')
                 theDomain.revertToLastCommit()
-                self.theIntegrator.revertToLastStep() # 不是theAlgorithm
+                self.theIntegrator.revertToLastStep()   # LoadControl 并没有 revertToLastStep()
                 return -3
             
             result = self.theIntegrator.commit()

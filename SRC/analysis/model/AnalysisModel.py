@@ -148,7 +148,7 @@ class AnalysisModel(MovableObject):
             graphStorage = MapOfTaggedObjects()
             self.myGroupGraph = Graph(graphStorage) # 重点！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
             # now create the vertices with a reference equal to the DOF_Group number.
-            # and a tag which ranges from 0 through numVertex-1
+            # and a tag which ranges from 0 through numVertex-1 
             theDOFs = self.getDOFs()
             count = AnalysisModel.START_VERTEX_NUM
             for dof in theDOFs:
