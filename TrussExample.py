@@ -1,7 +1,6 @@
-
 from SRC.analysis.algorithm.Linear import Linear
 from SRC.analysis.analysis.StaticAnalysis import StaticAnalysis
-from SRC.analysis.DOF_Numberer import DOF_Numberer
+from SRC.analysis.numberer.DOF_Numberer import DOF_Numberer
 from SRC.analysis.handler.PenaltyConstraintHandler import \
     PenaltyConstraintHandler
 from SRC.analysis.integrator.LoadControl import LoadControl
